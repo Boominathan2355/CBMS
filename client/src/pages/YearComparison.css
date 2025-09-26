@@ -1,0 +1,390 @@
+.year-comparison-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.year-comparison-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.year-comparison-header h1 {
+  color: #333;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+}
+
+.year-comparison-header p {
+  color: #666;
+  margin: 0;
+  font-size: 16px;
+}
+
+.year-comparison-controls {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.year-selectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.year-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.year-selector label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.year-select {
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.year-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.year-comparison-results {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.overall-comparison {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.overall-comparison h3 {
+  color: #333;
+  margin: 0 0 25px 0;
+  font-size: 1.4rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.comparison-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comparison-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header h4 {
+  color: #333;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.year-labels {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.current-year {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.vs {
+  color: #666;
+  font-weight: 500;
+}
+
+.previous-year {
+  color: #999;
+  font-weight: 500;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.amount-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.amount-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.amount-item .label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.amount-item .value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.change-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.change-indicator.positive {
+  background: #d4edda;
+  color: #155724;
+}
+
+.change-indicator.negative {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.change-indicator.neutral {
+  background: #e2e3e5;
+  color: #6c757d;
+}
+
+.change-indicator i {
+  font-size: 12px;
+}
+
+.department-comparison,
+.budget-head-comparison {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.department-comparison h3,
+.budget-head-comparison h3 {
+  color: #333;
+  margin: 0 0 25px 0;
+  font-size: 1.4rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.comparison-table {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.comparison-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.comparison-table th {
+  background: #f8f9fa;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.comparison-table td {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+.comparison-table tr:hover {
+  background: #f8f9fa;
+}
+
+.comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+.department-name,
+.budget-head-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.change-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.change-values {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.change-values .current {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.change-values .previous {
+  color: #999;
+  font-weight: 500;
+}
+
+.change-cell .change-indicator {
+  align-self: flex-start;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading span {
+  color: #666;
+  font-size: 16px;
+}
+
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .year-selectors {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .year-comparison-controls {
+    padding: 20px;
+  }
+  
+  .year-selectors {
+    grid-template-columns: 1fr;
+  }
+  
+  .overall-comparison,
+  .department-comparison,
+  .budget-head-comparison {
+    padding: 20px;
+  }
+  
+  .comparison-table {
+    font-size: 12px;
+  }
+  
+  .comparison-table th,
+  .comparison-table td {
+    padding: 10px 8px;
+  }
+  
+  .amount-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .change-values {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .year-comparison-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .year-labels {
+    align-self: flex-end;
+  }
+  
+  .comparison-table th,
+  .comparison-table td {
+    padding: 8px 6px;
+  }
+}

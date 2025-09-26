@@ -1,0 +1,644 @@
+import React, { useState, useEffect } from 'react';
+import { settingsAPI } from '../services/api';
+import './Settings.css';
+
+const Settings = () => {
+  const [settings, setSettings] = useState(null);
+  const [systemInfo, setSystemInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [activeTab, setActiveTab] = useState('general');
+  const [formData, setFormData] = useState({});
+
+  const tabs = [
+    { id: 'general', label: 'General', icon: 'fas fa-cog' },
+    { id: 'budget', label: 'Budget', icon: 'fas fa-money-bill-wave' },
+    { id: 'notifications', label: 'Notifications', icon: 'fas fa-bell' },
+    { id: 'security', label: 'Security', icon: 'fas fa-shield-alt' },
+    { id: 'system', label: 'System', icon: 'fas fa-server' }
+  ];
+
+  useEffect(() => {
+    fetchSettings();
+    fetchSystemInfo();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      setLoading(true);
+      const response = await settingsAPI.getSettings();
+      setSettings(response.data.data.settings);
+      setFormData(response.data.data.settings);
+      setError(null);
+    } catch (err) {
+      setError('Failed to fetch settings');
+      console.error('Error fetching settings:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSystemInfo = async () => {
+    try {
+      const response = await settingsAPI.getSystemInfo();
+      setSystemInfo(response.data.data.systemInfo);
+    } catch (err) {
+      console.error('Error fetching system info:', err);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [activeTab]: {
+        ...prev[activeTab],
+        [name]: type === 'checkbox' ? checked : value
+      }
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await settingsAPI.updateSettings({
+        category: activeTab,
+        settings: formData[activeTab]
+      });
+      
+      setSuccess(`${tabs.find(tab => tab.id === activeTab).label} settings updated successfully`);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError('Failed to update settings');
+      console.error('Error updating settings:', err);
+    }
+  };
+
+  const handleReset = async () => {
+    if (window.confirm(`Are you sure you want to reset ${tabs.find(tab => tab.id === activeTab).label} settings to default?`)) {
+      try {
+        await settingsAPI.resetSettings({ category: activeTab });
+        fetchSettings();
+        setSuccess(`${tabs.find(tab => tab.id === activeTab).label} settings reset to default`);
+        setTimeout(() => setSuccess(null), 3000);
+      } catch (err) {
+        setError('Failed to reset settings');
+        console.error('Error resetting settings:', err);
+      }
+    }
+  };
+
+  const formatBytes = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const formatUptime = (seconds) => {
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${days}d ${hours}h ${minutes}m`;
+  };
+
+  if (loading) {
+    return (
+      <div className="settings-container">
+        <div className="loading">Loading settings...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="settings-container">
+      <div className="settings-header">
+        <h1>System Settings</h1>
+        <p>Manage your CBMS system configuration and preferences</p>
+      </div>
+
+      {error && (
+        <div className="error-message">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="success-message">
+          {success}
+        </div>
+      )}
+
+      <div className="settings-content">
+        <div className="settings-sidebar">
+          <div className="tabs">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                className={`tab ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                <i className={tab.icon}></i>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="settings-main">
+          <div className="settings-panel">
+            <div className="panel-header">
+              <h2>{tabs.find(tab => tab.id === activeTab).label} Settings</h2>
+              <button className="btn btn-secondary" onClick={handleReset}>
+                <i className="fas fa-undo"></i> Reset to Default
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="settings-form">
+              {activeTab === 'general' && (
+                <div className="form-section">
+                  <div className="form-group">
+                    <label htmlFor="collegeName">College Name</label>
+                    <input
+                      type="text"
+                      id="collegeName"
+                      name="collegeName"
+                      value={formData.general?.collegeName || ''}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="collegeCode">College Code</label>
+                    <input
+                      type="text"
+                      id="collegeCode"
+                      name="collegeCode"
+                      value={formData.general?.collegeCode || ''}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="academicYear">Academic Year</label>
+                      <input
+                        type="text"
+                        id="academicYear"
+                        name="academicYear"
+                        value={formData.general?.academicYear || ''}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="financialYear">Financial Year</label>
+                      <input
+                        type="text"
+                        id="financialYear"
+                        name="financialYear"
+                        value={formData.general?.financialYear || ''}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="currency">Currency</label>
+                      <select
+                        id="currency"
+                        name="currency"
+                        value={formData.general?.currency || ''}
+                        onChange={handleInputChange}
+                      >
+                        <option value="INR">INR (₹)</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                      </select>
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="timezone">Timezone</label>
+                      <select
+                        id="timezone"
+                        name="timezone"
+                        value={formData.general?.timezone || ''}
+                        onChange={handleInputChange}
+                      >
+                        <option value="Asia/Kolkata">Asia/Kolkata</option>
+                        <option value="UTC">UTC</option>
+                        <option value="America/New_York">America/New_York</option>
+                        <option value="Europe/London">Europe/London</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'budget' && (
+                <div className="form-section">
+                  <div className="form-group">
+                    <label htmlFor="defaultAllocationPeriod">Default Allocation Period</label>
+                    <select
+                      id="defaultAllocationPeriod"
+                      name="defaultAllocationPeriod"
+                      value={formData.budget?.defaultAllocationPeriod || ''}
+                      onChange={handleInputChange}
+                    >
+                      <option value="monthly">Monthly</option>
+                      <option value="quarterly">Quarterly</option>
+                      <option value="yearly">Yearly</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="maxAllocationAmount">Max Allocation Amount</label>
+                      <input
+                        type="number"
+                        id="maxAllocationAmount"
+                        name="maxAllocationAmount"
+                        value={formData.budget?.maxAllocationAmount || ''}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="minAllocationAmount">Min Allocation Amount</label>
+                      <input
+                        type="number"
+                        id="minAllocationAmount"
+                        name="minAllocationAmount"
+                        value={formData.budget?.minAllocationAmount || ''}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="approvalRequiredAmount">Approval Required Amount</label>
+                      <input
+                        type="number"
+                        id="approvalRequiredAmount"
+                        name="approvalRequiredAmount"
+                        value={formData.budget?.approvalRequiredAmount || ''}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="autoApprovalAmount">Auto Approval Amount</label>
+                      <input
+                        type="number"
+                        id="autoApprovalAmount"
+                        name="autoApprovalAmount"
+                        value={formData.budget?.autoApprovalAmount || ''}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="budgetCarryForward"
+                        checked={formData.budget?.budgetCarryForward || false}
+                        onChange={handleInputChange}
+                      />
+                      Allow Budget Carry Forward
+                    </label>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="budgetCarryForwardPercentage">Carry Forward Percentage</label>
+                    <input
+                      type="number"
+                      id="budgetCarryForwardPercentage"
+                      name="budgetCarryForwardPercentage"
+                      value={formData.budget?.budgetCarryForwardPercentage || ''}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'notifications' && (
+                <div className="form-section">
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="emailNotifications"
+                        checked={formData.notifications?.emailNotifications || false}
+                        onChange={handleInputChange}
+                      />
+                      Enable Email Notifications
+                    </label>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="smsNotifications"
+                        checked={formData.notifications?.smsNotifications || false}
+                        onChange={handleInputChange}
+                      />
+                      Enable SMS Notifications
+                    </label>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="pushNotifications"
+                        checked={formData.notifications?.pushNotifications || false}
+                        onChange={handleInputChange}
+                      />
+                      Enable Push Notifications
+                    </label>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="notificationFrequency">Notification Frequency</label>
+                    <select
+                      id="notificationFrequency"
+                      name="notificationFrequency"
+                      value={formData.notifications?.notificationFrequency || ''}
+                      onChange={handleInputChange}
+                    >
+                      <option value="immediate">Immediate</option>
+                      <option value="hourly">Hourly</option>
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="reminderDays">Reminder Days</label>
+                      <input
+                        type="number"
+                        id="reminderDays"
+                        name="reminderDays"
+                        value={formData.notifications?.reminderDays || ''}
+                        onChange={handleInputChange}
+                        min="1"
+                        max="30"
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="escalationDays">Escalation Days</label>
+                      <input
+                        type="number"
+                        id="escalationDays"
+                        name="escalationDays"
+                        value={formData.notifications?.escalationDays || ''}
+                        onChange={handleInputChange}
+                        min="1"
+                        max="30"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'security' && (
+                <div className="form-section">
+                  <div className="form-group">
+                    <label htmlFor="passwordMinLength">Minimum Password Length</label>
+                    <input
+                      type="number"
+                      id="passwordMinLength"
+                      name="passwordMinLength"
+                      value={formData.security?.passwordMinLength || ''}
+                      onChange={handleInputChange}
+                      min="6"
+                      max="20"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="passwordRequireSpecialChars"
+                        checked={formData.security?.passwordRequireSpecialChars || false}
+                        onChange={handleInputChange}
+                      />
+                      Require Special Characters
+                    </label>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="passwordRequireNumbers"
+                        checked={formData.security?.passwordRequireNumbers || false}
+                        onChange={handleInputChange}
+                      />
+                      Require Numbers
+                    </label>
+                  </div>
+                  
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="sessionTimeout">Session Timeout (minutes)</label>
+                      <input
+                        type="number"
+                        id="sessionTimeout"
+                        name="sessionTimeout"
+                        value={formData.security?.sessionTimeout || ''}
+                        onChange={handleInputChange}
+                        min="5"
+                        max="480"
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="maxLoginAttempts">Max Login Attempts</label>
+                      <input
+                        type="number"
+                        id="maxLoginAttempts"
+                        name="maxLoginAttempts"
+                        value={formData.security?.maxLoginAttempts || ''}
+                        onChange={handleInputChange}
+                        min="3"
+                        max="10"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="lockoutDuration">Lockout Duration (minutes)</label>
+                    <input
+                      type="number"
+                      id="lockoutDuration"
+                      name="lockoutDuration"
+                      value={formData.security?.lockoutDuration || ''}
+                      onChange={handleInputChange}
+                      min="5"
+                      max="60"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="twoFactorAuth"
+                        checked={formData.security?.twoFactorAuth || false}
+                        onChange={handleInputChange}
+                      />
+                      Enable Two-Factor Authentication
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'system' && (
+                <div className="form-section">
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="maintenanceMode"
+                        checked={formData.system?.maintenanceMode || false}
+                        onChange={handleInputChange}
+                      />
+                      Enable Maintenance Mode
+                    </label>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="maintenanceMessage">Maintenance Message</label>
+                    <textarea
+                      id="maintenanceMessage"
+                      name="maintenanceMessage"
+                      value={formData.system?.maintenanceMessage || ''}
+                      onChange={handleInputChange}
+                      rows="3"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="maxFileUploadSize">Max File Upload Size (bytes)</label>
+                    <input
+                      type="number"
+                      id="maxFileUploadSize"
+                      name="maxFileUploadSize"
+                      value={formData.system?.maxFileUploadSize || ''}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="auditLogRetention">Audit Log Retention (days)</label>
+                    <input
+                      type="number"
+                      id="auditLogRetention"
+                      name="auditLogRetention"
+                      value={formData.system?.auditLogRetention || ''}
+                      onChange={handleInputChange}
+                      min="30"
+                      max="3650"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="backupFrequency">Backup Frequency</label>
+                    <select
+                      id="backupFrequency"
+                      name="backupFrequency"
+                      value={formData.system?.backupFrequency || ''}
+                      onChange={handleInputChange}
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="autoBackup"
+                        checked={formData.system?.autoBackup || false}
+                        onChange={handleInputChange}
+                      />
+                      Enable Auto Backup
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              <div className="form-actions">
+                <button type="submit" className="btn btn-primary">
+                  <i className="fas fa-save"></i> Save Settings
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {systemInfo && (
+            <div className="system-info-panel">
+              <h3>System Information</h3>
+              <div className="info-grid">
+                <div className="info-item">
+                  <label>Version</label>
+                  <span>{systemInfo.version}</span>
+                </div>
+                <div className="info-item">
+                  <label>Build Date</label>
+                  <span>{systemInfo.buildDate}</span>
+                </div>
+                <div className="info-item">
+                  <label>Node Version</label>
+                  <span>{systemInfo.nodeVersion}</span>
+                </div>
+                <div className="info-item">
+                  <label>Platform</label>
+                  <span>{systemInfo.platform}</span>
+                </div>
+                <div className="info-item">
+                  <label>Uptime</label>
+                  <span>{formatUptime(systemInfo.uptime)}</span>
+                </div>
+                <div className="info-item">
+                  <label>Memory Usage</label>
+                  <span>{formatBytes(systemInfo.memoryUsage.heapUsed)} / {formatBytes(systemInfo.memoryUsage.heapTotal)}</span>
+                </div>
+                <div className="info-item">
+                  <label>Environment</label>
+                  <span>{systemInfo.environment}</span>
+                </div>
+                <div className="info-item">
+                  <label>Database</label>
+                  <span>{systemInfo.database}</span>
+                </div>
+                <div className="info-item">
+                  <label>Last Backup</label>
+                  <span>{new Date(systemInfo.lastBackup).toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Settings;

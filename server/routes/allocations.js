@@ -1,0 +1,28 @@
+const express = require('express');
+const router = express.Router();
+const {
+  getAllocations,
+  getAllocationById,
+  createAllocation,
+  updateAllocation,
+  deleteAllocation,
+  getAllocationStats,
+  bulkCreateAllocations
+} = require('../controllers/allocationController');
+const { verifyToken, authorize } = require('../middleware/auth');
+
+// All routes require authentication
+router.use(verifyToken);
+
+// All routes require office access or higher
+router.use(authorize('office', 'vice_principal', 'principal', 'admin'));
+
+router.get('/', getAllocations);
+router.get('/stats', getAllocationStats);
+router.get('/:id', getAllocationById);
+router.post('/', createAllocation);
+router.post('/bulk', bulkCreateAllocations);
+router.put('/:id', updateAllocation);
+router.delete('/:id', deleteAllocation);
+
+module.exports = router;

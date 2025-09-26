@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://github.com/your-username/cbms/wiki
+    about: Check our documentation for common questions and guides
+  - name: 💬 Discussions
+    url: https://github.com/your-username/cbms/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 🐛 Bug Reports
+    url: https://github.com/your-username/cbms/issues/new?template=bug_report.yml
+    about: Report a bug or unexpected behavior
+  - name: ✨ Feature Requests
+    url: https://github.com/your-username/cbms/issues/new?template=feature_request.yml
+    about: Suggest a new feature or enhancement

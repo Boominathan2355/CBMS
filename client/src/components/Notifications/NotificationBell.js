@@ -1,0 +1,221 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { notificationAPI } from '../../services/api';
+import './NotificationBell.css';
+
+const NotificationBell = () => {
+  const { user } = useAuth();
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      fetchNotifications();
+      // Set up polling for new notifications
+      const interval = setInterval(fetchNotifications, 30000); // Check every 30 seconds
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await notificationAPI.getNotifications({ limit: 10 });
+      setNotifications(response.data.data.notifications);
+      setUnreadCount(response.data.data.unreadCount);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  const markAsRead = async (notificationId) => {
+    try {
+      await notificationAPI.markAsRead(notificationId);
+      setNotifications(prev => 
+        prev.map(notif => 
+          notif._id === notificationId 
+            ? { ...notif, isRead: true, readAt: new Date() }
+            : notif
+        )
+      );
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      await notificationAPI.markAllAsRead();
+      setNotifications(prev => 
+        prev.map(notif => ({ ...notif, isRead: true, readAt: new Date() }))
+      );
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+    }
+  };
+
+  const deleteNotification = async (notificationId) => {
+    try {
+      await notificationAPI.deleteNotification(notificationId);
+      setNotifications(prev => prev.filter(notif => notif._id !== notificationId));
+      setUnreadCount(prev => {
+        const deletedNotif = notifications.find(n => n._id === notificationId);
+        return deletedNotif && !deletedNotif.isRead ? prev - 1 : prev;
+      });
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
+  };
+
+  const formatTimeAgo = (dateString) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInSeconds = Math.floor((now - date) / 1000);
+
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    return `${Math.floor(diffInSeconds / 86400)}d ago`;
+  };
+
+  const getPriorityColor = (priority) => {
+    const colors = {
+      low: '#6c757d',
+      medium: '#17a2b8',
+      high: '#ffc107',
+      urgent: '#dc3545'
+    };
+    return colors[priority] || '#6c757d';
+  };
+
+  const getTypeIcon = (type) => {
+    const icons = {
+      expenditure_submitted: '📝',
+      expenditure_verified: '✅',
+      expenditure_approved: '✅',
+      expenditure_rejected: '❌',
+      budget_allocation_created: '💰',
+      budget_exhaustion_warning: '⚠️',
+      approval_reminder: '⏰',
+      system_announcement: '📢'
+    };
+    return icons[type] || '📄';
+  };
+
+  const handleNotificationClick = (notification) => {
+    if (!notification.isRead) {
+      markAsRead(notification._id);
+    }
+    
+    if (notification.actionUrl) {
+      window.location.href = notification.actionUrl;
+    }
+    
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="notification-bell">
+      <button 
+        className="bell-button"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="bell-icon">🔔</span>
+        {unreadCount > 0 && (
+          <span className="notification-badge">{unreadCount}</span>
+        )}
+      </button>
+
+      {isOpen && (
+        <div className="notification-dropdown">
+          <div className="notification-header">
+            <h3>Notifications</h3>
+            {unreadCount > 0 && (
+              <button 
+                onClick={markAllAsRead}
+                className="mark-all-read-btn"
+              >
+                Mark all read
+              </button>
+            )}
+          </div>
+
+          <div className="notification-list">
+            {notifications.length === 0 ? (
+              <div className="no-notifications">
+                <span className="no-notifications-icon">🔔</span>
+                <p>No notifications</p>
+              </div>
+            ) : (
+              notifications.map((notification) => (
+                <div
+                  key={notification._id}
+                  className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
+                  onClick={() => handleNotificationClick(notification)}
+                >
+                  <div className="notification-content">
+                    <div className="notification-icon">
+                      {getTypeIcon(notification.type)}
+                    </div>
+                    <div className="notification-details">
+                      <h4 className="notification-title">
+                        {notification.title}
+                      </h4>
+                      <p className="notification-message">
+                        {notification.message}
+                      </p>
+                      <div className="notification-meta">
+                        <span className="notification-time">
+                          {formatTimeAgo(notification.createdAt)}
+                        </span>
+                        <span 
+                          className="notification-priority"
+                          style={{ color: getPriorityColor(notification.priority) }}
+                        >
+                          {notification.priority}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="notification-actions">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteNotification(notification._id);
+                      }}
+                      className="delete-btn"
+                      title="Delete notification"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {notifications.length > 0 && (
+            <div className="notification-footer">
+              <a href="/notifications" className="view-all-link">
+                View all notifications
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Overlay to close dropdown when clicking outside */}
+      {isOpen && (
+        <div 
+          className="notification-overlay"
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
+    </div>
+  );
+};
+
+export default NotificationBell;
