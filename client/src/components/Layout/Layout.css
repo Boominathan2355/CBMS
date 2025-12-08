@@ -3,14 +3,45 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--bg-gradient-primary);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Global Background Shapes */
+.layout::before,
+.layout::after {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(80px);
+  /* Heavy blue for background */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.layout::before {
+  top: -150px;
+  right: -100px;
+}
+
+.layout::after {
+  bottom: -150px;
+  left: -100px;
 }
 
 .main-content {
   flex: 1;
-  background-color: var(--bg-body);
+  background: transparent;
+  /* Allow gradient to show through */
   /* min-height calculation accounts for header height */
   min-height: calc(100vh - 64px);
   padding-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 /* Container for page content */
@@ -19,6 +50,19 @@
   margin: 0 auto;
   padding: 2rem;
   width: 100%;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-header {
@@ -33,17 +77,19 @@
 }
 
 .page-title {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  /* Changed to white for contrast on gradient */
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.025em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .page-subtitle {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  font-weight: 400;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
   margin: 0;
 }
 
@@ -54,28 +100,31 @@
   border-radius: 0;
 }
 
-/* Card Styles */
+/* Glassmorphism Card Styles */
 .card {
-  background: var(--bg-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  border: 1px solid var(--border-light);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+  background: var(--glass-bg-hover);
 }
 
 /* Featured/Interactable Card Variant */
 .card.interactive:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary-light);
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.25);
+  border-color: rgba(79, 70, 229, 0.3);
 }
 
 .card-header {
@@ -84,30 +133,31 @@
   justify-content: space-between;
   margin-bottom: 1.25rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .card-title {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .card-icon {
   font-size: 1.25rem;
-  color: var(--primary);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--primary-light);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   margin-right: 0.75rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .card-body {
@@ -120,7 +170,7 @@
   justify-content: center;
   align-items: center;
   height: 200px;
-  color: var(--primary);
+  color: white;
 }
 
 /* Empty State */
@@ -128,9 +178,9 @@
   text-align: center;
   padding: 4rem 2rem;
   color: var(--text-tertiary);
-  background: var(--bg-surface);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-lg);
-  border: 2px dashed var(--border-medium);
+  border: 2px dashed rgba(0, 0, 0, 0.1);
 }
 
 .empty-state-icon {
@@ -176,7 +226,7 @@
   }
 
   .page-title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .card {

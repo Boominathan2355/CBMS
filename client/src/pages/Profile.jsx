@@ -185,113 +185,118 @@ const Profile = () => {
                         )}
                     </div>
 
-                    <div className="profile-avatar">
-                        <div className="avatar-circle">
-                            {user?.name?.charAt(0).toUpperCase() || 'U'}
-                        </div>
-                    </div>
-
-                    <form onSubmit={handleProfileSubmit} className="profile-form">
-                        <div className="form-group">
-                            <label htmlFor="name">
-                                <LuUser size={18} />
-                                Full Name
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                value={profileData.name}
-                                onChange={handleProfileChange}
-                                disabled={!isEditing}
-                                required
-                            />
+                    <div className="card-body">
+                        <div className="profile-avatar">
+                            <div className="avatar-circle">
+                                {user?.name?.charAt(0).toUpperCase() || 'U'}
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="email">
-                                <LuMail size={18} />
-                                Email Address
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={profileData.email}
-                                onChange={handleProfileChange}
-                                disabled={!isEditing}
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label>
-                                <LuBriefcase size={18} />
-                                Role
-                            </label>
-                            <input
-                                type="text"
-                                value={getRoleLabel(user?.role)}
-                                disabled
-                                className="readonly-field"
-                            />
-                        </div>
-
-                        {user?.department && (
+                        <form onSubmit={handleProfileSubmit} className="profile-form">
                             <div className="form-group">
-                                <label>
-                                    <LuBuilding2 size={18} />
-                                    Department
+                                <label htmlFor="name">
+                                    <LuUser size={18} />
+                                    Full Name
                                 </label>
                                 <input
                                     type="text"
-                                    value={user.department.name || user.department}
-                                    disabled
-                                    className="readonly-field"
+                                    id="name"
+                                    name="name"
+                                    value={profileData.name}
+                                    onChange={handleProfileChange}
+                                    disabled={!isEditing}
+                                    required
                                 />
                             </div>
-                        )}
 
-                        <div className="form-group">
-                            <label>
-                                <LuCalendar size={18} />
-                                Last Login
-                            </label>
-                            <input
-                                type="text"
-                                value={user?.lastLogin ? new Date(user.lastLogin).toLocaleString('en-IN') : 'N/A'}
-                                disabled
-                                className="readonly-field"
-                            />
-                        </div>
-
-                        {isEditing && (
-                            <div className="form-actions">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={() => {
-                                        setIsEditing(false);
-                                        setProfileData({
-                                            name: user.name || '',
-                                            email: user.email || '',
-                                        });
-                                    }}
-                                    disabled={loading}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary"
-                                    disabled={loading}
-                                >
-                                    <LuSave size={18} />
-                                    {loading ? 'Saving...' : 'Save Changes'}
-                                </button>
+                            <div className="form-group">
+                                <label htmlFor="email">
+                                    <LuMail size={18} />
+                                    Email Address
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={profileData.email}
+                                    onChange={handleProfileChange}
+                                    disabled={!isEditing}
+                                    required
+                                />
                             </div>
-                        )}
-                    </form>
+
+                            <div className="form-group">
+                                <label>
+                                    <LuBriefcase size={18} />
+                                    Role
+                                </label>
+                                <input
+                                    type="text"
+                                    value={getRoleLabel(user?.role)}
+                                    disabled
+                                    className="readonly-field"
+                                    readOnly
+                                />
+                            </div>
+
+                            {user?.department && (
+                                <div className="form-group">
+                                    <label>
+                                        <LuBuilding2 size={18} />
+                                        Department
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={user.department.name || user.department}
+                                        disabled
+                                        className="readonly-field"
+                                        readOnly
+                                    />
+                                </div>
+                            )}
+
+                            <div className="form-group">
+                                <label>
+                                    <LuCalendar size={18} />
+                                    Last Login
+                                </label>
+                                <input
+                                    type="text"
+                                    value={user?.lastLogin ? new Date(user.lastLogin).toLocaleString('en-IN') : 'N/A'}
+                                    disabled
+                                    className="readonly-field"
+                                    readOnly
+                                />
+                            </div>
+
+                            {isEditing && (
+                                <div className="form-actions">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => {
+                                            setIsEditing(false);
+                                            setProfileData({
+                                                name: user.name || '',
+                                                email: user.email || '',
+                                            });
+                                        }}
+                                        disabled={loading}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        disabled={loading}
+                                    >
+                                        <LuSave size={18} />
+                                        {loading ? 'Saving...' : 'Save Changes'}
+                                    </button>
+                                </div>
+                            )}
+                        </form>
+                    </div>
                 </div>
 
                 {/* Password Change Card */}
@@ -300,112 +305,114 @@ const Profile = () => {
                         <h2>Security Settings</h2>
                     </div>
 
-                    {!showPasswordForm ? (
-                        <div className="password-prompt">
-                            <LuLock size={48} className="lock-icon" />
-                            <p>Keep your account secure by regularly updating your password</p>
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => setShowPasswordForm(true)}
-                            >
-                                <LuLock size={18} />
-                                Change Password
-                            </button>
-                        </div>
-                    ) : (
-                        <form onSubmit={handlePasswordSubmit} className="password-form">
-                            <div className="form-group">
-                                <label htmlFor="currentPassword">Current Password</label>
-                                <div className="password-input-wrapper">
-                                    <input
-                                        type={showPasswords.current ? 'text' : 'password'}
-                                        id="currentPassword"
-                                        name="currentPassword"
-                                        value={passwordData.currentPassword}
-                                        onChange={handlePasswordChange}
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        className="password-toggle"
-                                        onClick={() => togglePasswordVisibility('current')}
-                                    >
-                                        {showPasswords.current ? <LuEyeOff size={18} /> : <LuEye size={18} />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="newPassword">New Password</label>
-                                <div className="password-input-wrapper">
-                                    <input
-                                        type={showPasswords.new ? 'text' : 'password'}
-                                        id="newPassword"
-                                        name="newPassword"
-                                        value={passwordData.newPassword}
-                                        onChange={handlePasswordChange}
-                                        required
-                                        minLength={6}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="password-toggle"
-                                        onClick={() => togglePasswordVisibility('new')}
-                                    >
-                                        {showPasswords.new ? <LuEyeOff size={18} /> : <LuEye size={18} />}
-                                    </button>
-                                </div>
-                                <small>Minimum 6 characters</small>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="confirmPassword">Confirm New Password</label>
-                                <div className="password-input-wrapper">
-                                    <input
-                                        type={showPasswords.confirm ? 'text' : 'password'}
-                                        id="confirmPassword"
-                                        name="confirmPassword"
-                                        value={passwordData.confirmPassword}
-                                        onChange={handlePasswordChange}
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        className="password-toggle"
-                                        onClick={() => togglePasswordVisibility('confirm')}
-                                    >
-                                        {showPasswords.confirm ? <LuEyeOff size={18} /> : <LuEye size={18} />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="form-actions">
+                    <div className="card-body">
+                        {!showPasswordForm ? (
+                            <div className="password-prompt">
+                                <LuLock size={48} className="lock-icon" />
+                                <p>Keep your account secure by regularly updating your password</p>
                                 <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={() => {
-                                        setShowPasswordForm(false);
-                                        setPasswordData({
-                                            currentPassword: '',
-                                            newPassword: '',
-                                            confirmPassword: '',
-                                        });
-                                    }}
-                                    disabled={loading}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
                                     className="btn btn-primary"
-                                    disabled={loading}
+                                    onClick={() => setShowPasswordForm(true)}
                                 >
                                     <LuLock size={18} />
-                                    {loading ? 'Changing...' : 'Change Password'}
+                                    Change Password
                                 </button>
                             </div>
-                        </form>
-                    )}
+                        ) : (
+                            <form onSubmit={handlePasswordSubmit} className="password-form">
+                                <div className="form-group">
+                                    <label htmlFor="currentPassword">Current Password</label>
+                                    <div className="password-input-wrapper">
+                                        <input
+                                            type={showPasswords.current ? 'text' : 'password'}
+                                            id="currentPassword"
+                                            name="currentPassword"
+                                            value={passwordData.currentPassword}
+                                            onChange={handlePasswordChange}
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            className="password-toggle"
+                                            onClick={() => togglePasswordVisibility('current')}
+                                        >
+                                            {showPasswords.current ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="newPassword">New Password</label>
+                                    <div className="password-input-wrapper">
+                                        <input
+                                            type={showPasswords.new ? 'text' : 'password'}
+                                            id="newPassword"
+                                            name="newPassword"
+                                            value={passwordData.newPassword}
+                                            onChange={handlePasswordChange}
+                                            required
+                                            minLength={6}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="password-toggle"
+                                            onClick={() => togglePasswordVisibility('new')}
+                                        >
+                                            {showPasswords.new ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                                        </button>
+                                    </div>
+                                    <small>Minimum 6 characters</small>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="confirmPassword">Confirm New Password</label>
+                                    <div className="password-input-wrapper">
+                                        <input
+                                            type={showPasswords.confirm ? 'text' : 'password'}
+                                            id="confirmPassword"
+                                            name="confirmPassword"
+                                            value={passwordData.confirmPassword}
+                                            onChange={handlePasswordChange}
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            className="password-toggle"
+                                            onClick={() => togglePasswordVisibility('confirm')}
+                                        >
+                                            {showPasswords.confirm ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="form-actions">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => {
+                                            setShowPasswordForm(false);
+                                            setPasswordData({
+                                                currentPassword: '',
+                                                newPassword: '',
+                                                confirmPassword: '',
+                                            });
+                                        }}
+                                        disabled={loading}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        disabled={loading}
+                                    >
+                                        <LuLock size={18} />
+                                        {loading ? 'Changing...' : 'Change Password'}
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
