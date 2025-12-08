@@ -142,25 +142,6 @@
 .btn-secondary {
   background: #6c757d;
   color: white;
-}
-
-.btn-secondary:hover {
-  background: #5a6268;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-
-}
-
-
-
-.upload-results {
-  background: white;
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);

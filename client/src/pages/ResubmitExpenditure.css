@@ -206,21 +206,6 @@
   color: white;
 }
 
-.btn-secondary:hover {
-  background: #5a6268;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-
-}
-
-
-
 .loading {
   text-align: center;
   padding: 50px;

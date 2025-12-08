@@ -16,14 +16,7 @@ const ProtectedRoute = ({ children, requiredRoles = null }) => {
         flexDirection: 'column',
         gap: '20px'
       }}>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #667eea',
-          borderRadius: '50%',
 
-        }}></div>
         <p style={{ color: '#6c757d' }}>Loading...</p>
 
       </div>

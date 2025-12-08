@@ -147,22 +147,6 @@
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-
-}
-
-
-
 .report-results {
   background: white;
   border-radius: 15px;
