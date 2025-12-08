@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { authAPI } from '../services/api';
 import { LuLock, LuEye, LuEyeOff, LuCheckCircle2, LuAlertCircle, LuGraduationCap } from 'react-icons/lu';
 import './ResetPassword.css';
 

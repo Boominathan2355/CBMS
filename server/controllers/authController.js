@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Department = require('../models/Department');
 const AuditLog = require('../models/AuditLog');
+const crypto = require('crypto');
 const { generateToken } = require('../middleware/auth');
 
 // @desc    Register a new user (Public for initial setup)
@@ -292,11 +293,163 @@ const logoutUser = async (req, res) => {
   }
 };
 
+// @desc    Forgot password - send reset email
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      // Don't reveal if user exists or not for security
+      return res.json({
+        success: true,
+        message: 'If an account exists with that email, a password reset link has been sent.'
+      });
+    }
+
+    if (!user.isActive) {
+      return res.status(400).json({
+        success: false,
+        message: 'Account is not active'
+      });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // Hash token and set expiry (1 hour)
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    // TODO: Send email with reset link
+    // For now, we'll just return the token in development mode
+    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
+
+    // Log the reset URL in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Password Reset URL:', resetUrl);
+      console.log('Reset Token:', resetToken);
+    }
+
+    res.json({
+      success: true,
+      message: 'If an account exists with that email, a password reset link has been sent.',
+      // Remove this in production:
+      ...(process.env.NODE_ENV === 'development' && { resetToken, resetUrl })
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while processing password reset request',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// @desc    Reset password with token
+// @route   POST /api/auth/reset-password/:token
+// @access  Public
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password is required'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long'
+      });
+    }
+
+    // Hash the token to compare with stored hash
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
+    // Find user with valid token
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password reset token is invalid or has expired'
+      });
+    }
+
+    // Set new password (will be hashed by pre-save hook)
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    // Log password reset event
+    try {
+      await AuditLog.create({
+        eventType: 'password_reset',
+        actor: user._id,
+        actorRole: user.role,
+        targetEntity: 'User',
+        targetId: user._id,
+        details: {
+          resetTime: new Date(),
+          ipAddress: req.ip || req.connection.remoteAddress
+        },
+        ipAddress: req.ip || req.connection.remoteAddress,
+        userAgent: req.get('User-Agent')
+      });
+    } catch (auditError) {
+      console.error('Audit log error (non-critical):', auditError);
+    }
+
+    res.json({
+      success: true,
+      message: 'Password has been reset successfully. You can now log in with your new password.'
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while resetting password',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getProfile,
   updateProfile,
   changePassword,
-  logoutUser
+  logoutUser,
+  forgotPassword,
+  resetPassword
 };

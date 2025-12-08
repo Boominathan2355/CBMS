@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { authAPI } from '../services/api';
 import { LuMail, LuArrowLeft, LuCheckCircle2, LuAlertCircle, LuGraduationCap } from 'react-icons/lu';
 import './ForgotPassword.css';
 

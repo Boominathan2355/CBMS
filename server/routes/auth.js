@@ -6,13 +6,17 @@ const {
   getProfile,
   updateProfile,
   changePassword,
-  logoutUser
+  logoutUser,
+  forgotPassword,
+  resetPassword
 } = require('../controllers/authController');
 const { verifyToken } = require('../middleware/auth');
 
 // Public routes
 router.post('/login', loginUser);
 router.post('/register', registerUser);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password/:token', resetPassword);
 
 // Protected routes
 router.use(verifyToken); // All routes below require authentication
