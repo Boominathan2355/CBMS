@@ -6,7 +6,7 @@ const { generateToken } = require('../middleware/auth');
 // @desc    Register a new user (Public for initial setup)
 // @route   POST /api/auth/register
 // @access  Public
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
   try {
     const { name, email, password, role, department } = req.body;
 
@@ -57,12 +57,7 @@ const registerUser = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Register user error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error during user registration',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    next(error);
   }
 };
 
