@@ -480,13 +480,10 @@
   border: 2px solid transparent;
   border-top: 2px solid currentColor;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -495,32 +492,32 @@
     gap: 20px;
     align-items: stretch;
   }
-  
+
   .approvals-header h1 {
     text-align: center;
   }
-  
+
   .queue-stats {
     justify-content: center;
   }
-  
+
   .filters-section {
     grid-template-columns: 1fr;
   }
-  
+
   .expenditures-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .card-actions {
     flex-direction: column;
   }
-  
+
   .modal {
     width: 95%;
     margin: 10px;
   }
-  
+
   .modal-actions {
     flex-direction: column;
   }
@@ -531,12 +528,12 @@
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .detail-row {
     flex-direction: column;
     gap: 2px;
   }
-  
+
   .detail-row .label {
     font-size: 12px;
   }

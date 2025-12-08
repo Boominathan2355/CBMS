@@ -154,13 +154,10 @@
   border: 2px solid transparent;
   border-top: 2px solid currentColor;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+
 
 .upload-results {
   background: white;
@@ -348,35 +345,35 @@
   .bulk-upload-container {
     padding: 15px;
   }
-  
+
   .upload-section,
   .upload-results,
   .help-section {
     padding: 20px;
   }
-  
+
   .file-label {
     flex-direction: column;
     text-align: center;
     gap: 10px;
   }
-  
+
   .file-icon {
     margin-right: 0;
   }
-  
+
   .results-summary {
     grid-template-columns: 1fr;
   }
-  
+
   .help-content {
     grid-template-columns: 1fr;
   }
-  
+
   .results-table {
     font-size: 12px;
   }
-  
+
   .results-table th,
   .results-table td {
     padding: 10px 8px;
@@ -387,12 +384,12 @@
   .bulk-upload-header h1 {
     font-size: 1.5rem;
   }
-  
+
   .results-table th,
   .results-table td {
     padding: 8px 6px;
   }
-  
+
   .btn {
     padding: 10px 20px;
     font-size: 13px;

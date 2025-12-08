@@ -73,21 +73,6 @@
 .refresh-btn:hover {
   background: rgba(255, 255, 255, 0.3);
   border-color: rgba(255, 255, 255, 0.5);
-}
-
-.refresh-btn i {
-  animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Metrics Grid */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -217,9 +202,11 @@
   0% {
     box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
   }
+
   70% {
     box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
   }
@@ -246,7 +233,7 @@
   border: 4px solid #f3f3f3;
   border-top: 4px solid #667eea;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+
   margin-bottom: 20px;
 }
 
@@ -266,38 +253,38 @@
   .graphical-dashboard-container {
     padding: 15px;
   }
-  
+
   .dashboard-header {
     flex-direction: column;
     gap: 20px;
     text-align: center;
   }
-  
+
   .header-content h1 {
     font-size: 2rem;
   }
-  
+
   .header-controls {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .metrics-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .metric-card {
     padding: 20px;
   }
-  
+
   .chart-card {
     padding: 20px;
   }
-  
+
   .chart-container {
     height: 300px;
   }
-  
+
   .status-section {
     flex-direction: column;
     gap: 10px;
@@ -309,27 +296,27 @@
   .dashboard-header {
     padding: 20px;
   }
-  
+
   .header-content h1 {
     font-size: 1.5rem;
   }
-  
+
   .metric-card {
     flex-direction: column;
     text-align: center;
     gap: 15px;
   }
-  
+
   .metric-icon {
     width: 50px;
     height: 50px;
     font-size: 1.2rem;
   }
-  
+
   .metric-content h3 {
     font-size: 1.5rem;
   }
-  
+
   .chart-container {
     height: 250px;
   }
@@ -362,6 +349,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -369,10 +357,21 @@
 }
 
 /* Stagger animation for metric cards */
-.metric-card:nth-child(1) { animation-delay: 0.1s; }
-.metric-card:nth-child(2) { animation-delay: 0.2s; }
-.metric-card:nth-child(3) { animation-delay: 0.3s; }
-.metric-card:nth-child(4) { animation-delay: 0.4s; }
+.metric-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.metric-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.metric-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.metric-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
 
 /* Chart card animations */
 .chart-card {
@@ -384,6 +383,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -391,7 +391,18 @@
 }
 
 /* Stagger animation for chart cards */
-.chart-card:nth-child(1) { animation-delay: 0.1s; }
-.chart-card:nth-child(2) { animation-delay: 0.2s; }
-.chart-card:nth-child(3) { animation-delay: 0.3s; }
-.chart-card:nth-child(4) { animation-delay: 0.4s; }
+.chart-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.chart-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.chart-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.chart-card:nth-child(4) {
+  animation-delay: 0.4s;
+}

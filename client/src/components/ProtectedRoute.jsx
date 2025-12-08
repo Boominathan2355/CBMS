@@ -22,15 +22,10 @@ const ProtectedRoute = ({ children, requiredRoles = null }) => {
           border: '4px solid #f3f3f3',
           borderTop: '4px solid #667eea',
           borderRadius: '50%',
-          animation: 'spin 1s linear infinite'
+
         }}></div>
         <p style={{ color: '#6c757d' }}>Loading...</p>
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
+
       </div>
     );
   }

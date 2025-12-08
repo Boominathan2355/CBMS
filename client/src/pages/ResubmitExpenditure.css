@@ -216,13 +216,10 @@
   border: 2px solid transparent;
   border-top: 2px solid currentColor;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+
 
 .loading {
   text-align: center;
@@ -246,23 +243,23 @@
   .resubmit-expenditure-container {
     padding: 15px;
   }
-  
+
   .resubmit-form {
     padding: 20px;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .info-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
-  
+
   .btn {
     width: 100%;
     justify-content: center;
@@ -273,7 +270,7 @@
   .resubmit-header h1 {
     font-size: 1.5rem;
   }
-  
+
   .form-group input,
   .form-group textarea,
   .form-group select {
