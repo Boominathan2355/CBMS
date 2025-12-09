@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LuGraduationCap, LuAlertCircle, LuEye, LuEyeOff, LuWallet, LuLineChart, LuCheckCircle, LuTrendingUp } from 'react-icons/lu';
+import { GraduationCap, AlertCircle, Eye, EyeOff, Wallet, LineChart, CheckCircle, TrendingUp } from 'lucide-react';
 import './Login.css';
 
 const Login = () => {
@@ -52,7 +52,7 @@ const Login = () => {
       <div className="login-card">
         <div className="login-header">
           <div className="login-logo">
-            <span className="logo-icon"><LuGraduationCap size={32} /></span>
+            <span className="logo-icon"><GraduationCap size={32} /></span>
             <h1>CBMS</h1>
           </div>
           <h2>Welcome Back</h2>
@@ -62,7 +62,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="login-form">
           {error && (
             <div className="error-message">
-              <LuAlertCircle size={20} />
+              <AlertCircle size={20} />
               {error}
             </div>
           )}
@@ -99,7 +99,7 @@ const Login = () => {
                 className="password-toggle"
                 onClick={togglePasswordVisibility}
               >
-                {showPassword ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
@@ -139,19 +139,19 @@ const Login = () => {
         <h3>College Budget Management System</h3>
         <div className="features">
           <div className="feature">
-            <span className="feature-icon"><LuWallet size={24} /></span>
+            <span className="feature-icon"><Wallet size={24} /></span>
             <span>Budget Allocation</span>
           </div>
           <div className="feature">
-            <span className="feature-icon"><LuLineChart size={24} /></span>
+            <span className="feature-icon"><LineChart size={24} /></span>
             <span>Expenditure Tracking</span>
           </div>
           <div className="feature">
-            <span className="feature-icon"><LuCheckCircle size={24} /></span>
+            <span className="feature-icon"><CheckCircle size={24} /></span>
             <span>Approval Workflow</span>
           </div>
           <div className="feature">
-            <span className="feature-icon"><LuTrendingUp size={24} /></span>
+            <span className="feature-icon"><TrendingUp size={24} /></span>
             <span>Reports & Analytics</span>
           </div>
         </div>

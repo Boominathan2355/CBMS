@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { expenditureAPI, allocationAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { LuSend } from 'react-icons/lu';
+import { Send } from 'lucide-react';
 import './ResubmitExpenditure.css';
 
 const ResubmitExpenditure = () => {
@@ -357,7 +357,7 @@ const ResubmitExpenditure = () => {
               </>
             ) : (
               <>
-                <LuSend size={16} />
+                <Send size={16} />
                 Resubmit Expenditure
               </>
             )}

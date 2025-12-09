@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { notificationAPI } from '../services/api';
-import { LuCheckCheck, LuBell, LuBellOff, LuCheckCircle, LuUser, LuCheck, LuTrash2, LuChevronLeft, LuChevronRight } from 'react-icons/lu';
+import { CheckCheck, Bell, BellOff, CheckCircle, User, Check, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import './Notifications.css';
 
 const Notifications = () => {
@@ -192,7 +192,7 @@ const Notifications = () => {
         <div className="header-actions">
           {stats && stats.unreadNotifications > 0 && (
             <button className="btn btn-primary" onClick={handleMarkAllAsRead}>
-              <LuCheckCheck size={16} />
+              <CheckCheck size={16} />
               Mark All Read
             </button>
           )}
@@ -209,7 +209,7 @@ const Notifications = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon">
-              <LuBell size={16} />
+              <Bell size={16} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{stats.totalNotifications}</div>
@@ -218,7 +218,7 @@ const Notifications = () => {
           </div>
           <div className="stat-card unread">
             <div className="stat-icon">
-              <LuBellOff size={16} />
+              <BellOff size={16} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{stats.unreadNotifications}</div>
@@ -227,7 +227,7 @@ const Notifications = () => {
           </div>
           <div className="stat-card read">
             <div className="stat-icon">
-              <LuCheckCircle size={16} />
+              <CheckCircle size={16} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{stats.readNotifications}</div>
@@ -313,7 +313,7 @@ const Notifications = () => {
 
               {notification.senderName && (
                 <div className="notification-sender">
-                  <LuUser size={16} />
+                  <User size={16} />
                   <span>From: {notification.senderName}</span>
                 </div>
               )}
@@ -336,14 +336,14 @@ const Notifications = () => {
                   className="btn btn-sm btn-primary"
                   onClick={() => handleMarkAsRead(notification._id)}
                 >
-                  <LuCheck size={16} />
+                  <Check size={16} />
                 </button>
               )}
               <button
                 className="btn btn-sm btn-danger"
                 onClick={() => handleDeleteNotification(notification._id)}
               >
-                <LuTrash2 size={16} />
+                <Trash2 size={16} />
               </button>
             </div>
           </div>
@@ -353,7 +353,7 @@ const Notifications = () => {
       {notifications.length === 0 && (
         <div className="no-notifications">
           <div className="no-notifications-icon">
-            <LuBellOff size={48} />
+            <BellOff size={48} />
           </div>
           <h3>No Notifications</h3>
           <p>No notifications found matching the current filters.</p>
@@ -367,7 +367,7 @@ const Notifications = () => {
             onClick={() => handlePageChange(pagination.currentPage - 1)}
             disabled={pagination.currentPage === 1}
           >
-            <LuChevronLeft size={18} />
+            <ChevronLeft size={18} />
             Previous
           </button>
 
@@ -381,7 +381,7 @@ const Notifications = () => {
             disabled={pagination.currentPage === pagination.totalPages}
           >
             Next
-            <LuChevronRight size={18} />
+            <ChevronRight size={18} />
           </button>
         </div>
       )}

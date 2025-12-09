@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { auditLogAPI } from '../services/api';
-import { LuDownload, LuList, LuUsers, LuLineChart, LuClipboardList, LuChevronLeft, LuChevronRight } from 'react-icons/lu';
+import { Download, List, Users, LineChart, ClipboardList, ChevronLeft, ChevronRight } from 'lucide-react';
 import './AuditLogs.css';
 
 const AuditLogs = () => {
@@ -155,7 +155,7 @@ const AuditLogs = () => {
         <h1>Audit Logs</h1>
         <div className="header-actions">
           <button className="btn btn-primary" onClick={handleExport}>
-            <LuDownload size={16} />
+            <Download size={16} />
             Export CSV
           </button>
         </div>
@@ -171,7 +171,7 @@ const AuditLogs = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon">
-              <LuList size={20} />
+              <List size={20} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{stats.totalLogs}</div>
@@ -180,7 +180,7 @@ const AuditLogs = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <LuUsers size={20} />
+              <Users size={20} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{Object.keys(stats.logsByActorRole).length}</div>
@@ -189,7 +189,7 @@ const AuditLogs = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <LuLineChart size={20} />
+              <LineChart size={20} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{Object.keys(stats.logsByEventType).length}</div>
@@ -348,7 +348,7 @@ const AuditLogs = () => {
       {auditLogs.length === 0 && (
         <div className="no-logs">
           <div className="no-logs-icon">
-            <LuClipboardList size={48} />
+            <ClipboardList size={48} />
           </div>
           <h3>No Audit Logs Found</h3>
           <p>No audit logs found matching the current filters.</p>
@@ -362,7 +362,7 @@ const AuditLogs = () => {
             onClick={() => handlePageChange(pagination.currentPage - 1)}
             disabled={pagination.currentPage === 1}
           >
-            <LuChevronLeft size={18} />
+            <ChevronLeft size={18} />
             Previous
           </button>
 
@@ -376,7 +376,7 @@ const AuditLogs = () => {
             disabled={pagination.currentPage === pagination.totalPages}
           >
             Next
-            <LuChevronRight size={18} />
+            <ChevronRight size={18} />
           </button>
         </div>
       )}

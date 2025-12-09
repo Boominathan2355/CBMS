@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { allocationAPI, expenditureAPI, authAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { LuDollarSign, LuCreditCard, LuWallet, LuPieChart, LuCheckCircle, LuAlertTriangle, LuReceipt, LuPlus, LuList, LuDownload } from 'react-icons/lu';
+import { DollarSign, CreditCard, Wallet, PieChart, CheckCircle, AlertTriangle, Receipt, Plus, List, Download } from 'lucide-react';
 import './DepartmentDashboard.css';
 
 const DepartmentDashboard = () => {
@@ -176,7 +176,7 @@ const DepartmentDashboard = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon">
-              <LuDollarSign size={32} />
+              <DollarSign size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{formatCurrency(stats.summary.totalAllocated)}</div>
@@ -185,7 +185,7 @@ const DepartmentDashboard = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <LuCreditCard size={32} />
+              <CreditCard size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{formatCurrency(stats.summary.totalSpent)}</div>
@@ -194,7 +194,7 @@ const DepartmentDashboard = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <LuWallet size={32} />
+              <Wallet size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{formatCurrency(stats.summary.totalRemaining)}</div>
@@ -203,7 +203,7 @@ const DepartmentDashboard = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <LuPieChart size={32} />
+              <PieChart size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{stats.summary.utilizationPercentage}%</div>
@@ -252,12 +252,12 @@ const DepartmentDashboard = () => {
                   <div className="budget-status">
                     {allocation.remainingAmount > 0 ? (
                       <span className="status available">
-                        <LuCheckCircle size={16} />
+                        <CheckCircle size={16} />
                         Budget Available
                       </span>
                     ) : (
                       <span className="status exhausted">
-                        <LuAlertTriangle size={16} />
+                        <AlertTriangle size={16} />
                         Budget Exhausted
                       </span>
                     )}
@@ -303,7 +303,7 @@ const DepartmentDashboard = () => {
           {expenditures.length === 0 && (
             <div className="no-expenditures">
               <div className="no-expenditures-icon">
-                <LuReceipt size={16} />
+                <Receipt size={16} />
               </div>
               <h3>No Expenditures</h3>
               <p>No expenditures have been submitted yet.</p>
@@ -316,15 +316,15 @@ const DepartmentDashboard = () => {
         <h2>Quick Actions</h2>
         <div className="action-buttons">
           <button className="btn btn-primary">
-            <LuPlus size={18} />
+            <Plus size={18} />
             Submit New Expenditure
           </button>
           <button className="btn btn-secondary">
-            <LuList size={18} />
+            <List size={18} />
             View All Expenditures
           </button>
           <button className="btn btn-secondary">
-            <LuDownload size={18} />
+            <Download size={18} />
             Download Report
           </button>
         </div>

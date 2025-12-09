@@ -3,26 +3,26 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import NotificationBell from '../Notifications/NotificationBell';
 import {
-  LuLayoutDashboard,
-  LuLineChart,
-  LuUsers,
-  LuBuilding2,
-  LuWallet,
-  LuSettings,
-  LuClipboardList,
-  LuCheckSquare,
-  LuCalculator,
-  LuUser,
-  LuLock,
-  LuLogOut,
-  LuFileText,
-  LuSearch,
-  LuPlusCircle,
-  LuFiles,
-  LuMenu,
-  LuGraduationCap,
-  LuChevronDown
-} from 'react-icons/lu';
+  LayoutDashboard,
+  LineChart,
+  Users,
+  Building2,
+  Wallet,
+  Settings,
+  ClipboardList,
+  CheckSquare,
+  Calculator,
+  User,
+  Lock,
+  LogOut,
+  FileText,
+  Search,
+  PlusCircle,
+  Files,
+  Menu,
+  GraduationCap,
+  ChevronDown
+} from 'lucide-react';
 import './Header.css';
 
 const Header = () => {
@@ -61,51 +61,51 @@ const Header = () => {
     if (!user) return [];
 
     const baseItems = [
-      { path: '/dashboard', label: 'Dashboard', icon: <LuLayoutDashboard /> },
-      { path: '/graphical-dashboard', label: 'Analytics', icon: <LuLineChart /> },
+      { path: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard /> },
+      { path: '/graphical-dashboard', label: 'Analytics', icon: <LineChart /> },
     ];
 
     switch (user.role) {
       case 'admin':
         return [
           ...baseItems,
-          { path: '/users', label: 'Users', icon: <LuUsers /> },
-          { path: '/departments', label: 'Departments', icon: <LuBuilding2 /> },
-          { path: '/budget-heads', label: 'Budget Heads', icon: <LuWallet /> },
-          { path: '/settings', label: 'Settings', icon: <LuSettings /> },
+          { path: '/users', label: 'Users', icon: <Users /> },
+          { path: '/departments', label: 'Departments', icon: <Building2 /> },
+          { path: '/budget-heads', label: 'Budget Heads', icon: <Wallet /> },
+          { path: '/settings', label: 'Settings', icon: <Settings /> },
         ];
       case 'office':
         return [
           ...baseItems,
-          { path: '/allocations', label: 'Allocations', icon: <LuClipboardList /> },
-          { path: '/approvals', label: 'Approvals', icon: <LuCheckSquare /> },
-          { path: '/reports', label: 'Reports', icon: <LuFileText /> },
+          { path: '/allocations', label: 'Allocations', icon: <ClipboardList /> },
+          { path: '/approvals', label: 'Approvals', icon: <CheckSquare /> },
+          { path: '/reports', label: 'Reports', icon: <FileText /> },
         ];
       case 'department':
         return [
           ...baseItems,
-          { path: '/expenditures', label: 'My Expenditures', icon: <LuCalculator /> },
-          { path: '/submit-expenditure', label: 'Submit Expenditure', icon: <LuPlusCircle /> },
+          { path: '/expenditures', label: 'My Expenditures', icon: <Calculator /> },
+          { path: '/submit-expenditure', label: 'Submit Expenditure', icon: <PlusCircle /> },
         ];
       case 'hod':
         return [
           ...baseItems,
-          { path: '/department-expenditures', label: 'Department Expenditures', icon: <LuFiles /> },
-          { path: '/approvals', label: 'Approvals', icon: <LuCheckSquare /> },
+          { path: '/department-expenditures', label: 'Department Expenditures', icon: <Files /> },
+          { path: '/approvals', label: 'Approvals', icon: <CheckSquare /> },
         ];
       case 'vice_principal':
       case 'principal':
         return [
           ...baseItems,
-          { path: '/approvals', label: 'Approvals', icon: <LuCheckSquare /> },
-          { path: '/reports', label: 'Reports', icon: <LuFileText /> },
-          { path: '/consolidated-view', label: 'Consolidated View', icon: <LuLineChart /> },
+          { path: '/approvals', label: 'Approvals', icon: <CheckSquare /> },
+          { path: '/reports', label: 'Reports', icon: <FileText /> },
+          { path: '/consolidated-view', label: 'Consolidated View', icon: <LineChart /> },
         ];
       case 'auditor':
         return [
           ...baseItems,
-          { path: '/audit-logs', label: 'Audit Logs', icon: <LuSearch /> },
-          { path: '/reports', label: 'Reports', icon: <LuFileText /> },
+          { path: '/audit-logs', label: 'Audit Logs', icon: <Search /> },
+          { path: '/reports', label: 'Reports', icon: <FileText /> },
         ];
       default:
         return baseItems;
@@ -117,7 +117,7 @@ const Header = () => {
       <div className="header-container">
         {/* Logo */}
         <Link to="/" className="logo">
-          <span className="logo-icon"><LuGraduationCap /></span>
+          <span className="logo-icon"><GraduationCap /></span>
           <span className="logo-text">CBMS</span>
         </Link>
 
@@ -148,23 +148,23 @@ const Header = () => {
               <span className="user-name">{user?.name}</span>
               <span className="user-role">{getRoleDisplayName(user?.role)}</span>
             </div>
-            <span className="dropdown-arrow"><LuChevronDown /></span>
+            <span className="dropdown-arrow"><ChevronDown /></span>
           </div>
 
           {/* Profile Dropdown */}
           {isProfileOpen && (
             <div className="profile-dropdown">
               <Link to="/profile" className="dropdown-item">
-                <span className="dropdown-icon"><LuUser /></span>
+                <span className="dropdown-icon"><User /></span>
                 Profile
               </Link>
               <Link to="/change-password" className="dropdown-item">
-                <span className="dropdown-icon"><LuLock /></span>
+                <span className="dropdown-icon"><Lock /></span>
                 Change Password
               </Link>
               <div className="dropdown-divider"></div>
               <button onClick={handleLogout} className="dropdown-item logout-btn">
-                <span className="dropdown-icon"><LuLogOut /></span>
+                <span className="dropdown-icon"><LogOut /></span>
                 Logout
               </button>
             </div>
@@ -173,7 +173,7 @@ const Header = () => {
 
         {/* Mobile Menu Button */}
         <button className="mobile-menu-btn" onClick={toggleMenu}>
-          <LuMenu size={24} />
+          <Menu size={24} />
         </button>
       </div>
 

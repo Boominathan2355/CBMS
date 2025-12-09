@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { departmentsAPI } from '../services/api';
-import { LuPlus, LuPencil, LuTrash2, LuX } from 'react-icons/lu';
+import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import './Departments.css';
 
 const Departments = () => {
@@ -122,7 +122,7 @@ const Departments = () => {
       <div className="departments-header">
         <h1>Departments Management</h1>
         <button className="btn btn-primary" onClick={openModal}>
-          <LuPlus size={18} /> Add Department
+          <Plus size={18} /> Add Department
         </button>
       </div>
 
@@ -194,13 +194,13 @@ const Departments = () => {
                       className="btn btn-sm btn-secondary"
                       onClick={() => handleEdit(dept)}
                     >
-                      <LuPencil size={16} />
+                      <Pencil size={16} />
                     </button>
                     <button
                       className="btn btn-sm btn-danger"
                       onClick={() => handleDelete(dept._id)}
                     >
-                      <LuTrash2 size={16} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </td>
@@ -216,7 +216,7 @@ const Departments = () => {
             <div className="modal-header">
               <h2>{editingDepartment ? 'Edit Department' : 'Add New Department'}</h2>
               <button className="close-btn" onClick={closeModal}>
-                <LuX size={20} />
+                <X size={20} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { allocationAPI, departmentsAPI, budgetHeadsAPI } from '../services/api';
-import { LuPlus, LuDollarSign, LuCreditCard, LuWallet, LuPieChart, LuPencil, LuTrash2, LuX } from 'react-icons/lu';
+import { Plus, DollarSign, CreditCard, Wallet, PieChart, Pencil, Trash2, X } from 'lucide-react';
 import './BudgetAllocations.css';
 
 const BudgetAllocations = () => {
@@ -175,7 +175,7 @@ const BudgetAllocations = () => {
       <div className="allocations-header">
         <h1>Budget Allocations Management</h1>
         <button className="btn btn-primary" onClick={openModal}>
-          <LuPlus size={18} /> Add Allocation
+          <Plus size={18} /> Add Allocation
         </button>
       </div>
 
@@ -189,7 +189,7 @@ const BudgetAllocations = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon">
-              <LuDollarSign size={32} />
+              <DollarSign size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">₹{stats.summary.totalAllocated.toLocaleString()}</div>
@@ -198,7 +198,7 @@ const BudgetAllocations = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <LuCreditCard size={32} />
+              <CreditCard size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">₹{stats.summary.totalSpent.toLocaleString()}</div>
@@ -207,7 +207,7 @@ const BudgetAllocations = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <LuWallet size={32} />
+              <Wallet size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">₹{stats.summary.totalRemaining.toLocaleString()}</div>
@@ -216,7 +216,7 @@ const BudgetAllocations = () => {
           </div>
           <div className="stat-card">
             <div className="stat-icon">
-              <LuPieChart size={32} />
+              <PieChart size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{stats.summary.utilizationPercentage}%</div>
@@ -328,13 +328,13 @@ const BudgetAllocations = () => {
                         className="btn btn-sm btn-secondary"
                         onClick={() => handleEdit(allocation)}
                       >
-                        <LuPencil size={16} />
+                        <Pencil size={16} />
                       </button>
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => handleDelete(allocation._id)}
                       >
-                        <LuTrash2 size={16} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </td>
@@ -348,7 +348,7 @@ const BudgetAllocations = () => {
       {allocations.length === 0 && (
         <div className="no-allocations">
           <div className="no-allocations-icon">
-            <LuDollarSign size={48} />
+            <DollarSign size={48} />
           </div>
           <h3>No Allocations Found</h3>
           <p>No allocations found matching the current filters.</p>
@@ -361,7 +361,7 @@ const BudgetAllocations = () => {
             <div className="modal-header">
               <h2>{editingAllocation ? 'Edit Allocation' : 'Add New Allocation'}</h2>
               <button className="close-btn" onClick={closeModal}>
-                <LuX size={20} />
+                <X size={20} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">

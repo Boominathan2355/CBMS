@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../services/api';
-import { LuUser, LuMail, LuBriefcase, LuBuilding2, LuCalendar, LuLock, LuSave, LuAlertCircle, LuCheckCircle2, LuEye, LuEyeOff } from 'react-icons/lu';
+import { User, Mail, Briefcase, Building2, Calendar, Lock, Save, AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import './Profile.css';
 
 const Profile = () => {
@@ -158,14 +158,14 @@ const Profile = () => {
 
             {error && (
                 <div className="alert alert-error">
-                    <LuAlertCircle size={20} />
+                    <AlertCircle size={20} />
                     <span>{error}</span>
                 </div>
             )}
 
             {success && (
                 <div className="alert alert-success">
-                    <LuCheckCircle2 size={20} />
+                    <CheckCircle2 size={20} />
                     <span>{success}</span>
                 </div>
             )}
@@ -195,7 +195,7 @@ const Profile = () => {
                         <form onSubmit={handleProfileSubmit} className="profile-form">
                             <div className="form-group">
                                 <label htmlFor="name">
-                                    <LuUser size={18} />
+                                    <User size={18} />
                                     Full Name
                                 </label>
                                 <input
@@ -211,7 +211,7 @@ const Profile = () => {
 
                             <div className="form-group">
                                 <label htmlFor="email">
-                                    <LuMail size={18} />
+                                    <Mail size={18} />
                                     Email Address
                                 </label>
                                 <input
@@ -227,7 +227,7 @@ const Profile = () => {
 
                             <div className="form-group">
                                 <label>
-                                    <LuBriefcase size={18} />
+                                    <Briefcase size={18} />
                                     Role
                                 </label>
                                 <input
@@ -242,7 +242,7 @@ const Profile = () => {
                             {user?.department && (
                                 <div className="form-group">
                                     <label>
-                                        <LuBuilding2 size={18} />
+                                        <Building2 size={18} />
                                         Department
                                     </label>
                                     <input
@@ -257,7 +257,7 @@ const Profile = () => {
 
                             <div className="form-group">
                                 <label>
-                                    <LuCalendar size={18} />
+                                    <Calendar size={18} />
                                     Last Login
                                 </label>
                                 <input
@@ -290,7 +290,7 @@ const Profile = () => {
                                         className="btn btn-primary"
                                         disabled={loading}
                                     >
-                                        <LuSave size={18} />
+                                        <Save size={18} />
                                         {loading ? 'Saving...' : 'Save Changes'}
                                     </button>
                                 </div>
@@ -308,13 +308,13 @@ const Profile = () => {
                     <div className="card-body">
                         {!showPasswordForm ? (
                             <div className="password-prompt">
-                                <LuLock size={48} className="lock-icon" />
+                                <Lock size={48} className="lock-icon" />
                                 <p>Keep your account secure by regularly updating your password</p>
                                 <button
                                     className="btn btn-primary"
                                     onClick={() => setShowPasswordForm(true)}
                                 >
-                                    <LuLock size={18} />
+                                    <Lock size={18} />
                                     Change Password
                                 </button>
                             </div>
@@ -336,7 +336,7 @@ const Profile = () => {
                                             className="password-toggle"
                                             onClick={() => togglePasswordVisibility('current')}
                                         >
-                                            {showPasswords.current ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                                            {showPasswords.current ? <EyeOff size={18} /> : <Eye size={18} />}
                                         </button>
                                     </div>
                                 </div>
@@ -358,7 +358,7 @@ const Profile = () => {
                                             className="password-toggle"
                                             onClick={() => togglePasswordVisibility('new')}
                                         >
-                                            {showPasswords.new ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                                            {showPasswords.new ? <EyeOff size={18} /> : <Eye size={18} />}
                                         </button>
                                     </div>
                                     <small>Minimum 6 characters</small>
@@ -380,7 +380,7 @@ const Profile = () => {
                                             className="password-toggle"
                                             onClick={() => togglePasswordVisibility('confirm')}
                                         >
-                                            {showPasswords.confirm ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                                            {showPasswords.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
                                         </button>
                                     </div>
                                 </div>
@@ -406,7 +406,7 @@ const Profile = () => {
                                         className="btn btn-primary"
                                         disabled={loading}
                                     >
-                                        <LuLock size={18} />
+                                        <Lock size={18} />
                                         {loading ? 'Changing...' : 'Change Password'}
                                     </button>
                                 </div>

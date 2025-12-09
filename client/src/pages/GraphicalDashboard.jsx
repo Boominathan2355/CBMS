@@ -16,7 +16,7 @@ import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import { allocationAPI, expenditureAPI, reportAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { LuRefreshCw } from 'react-icons/lu';
+import { RefreshCw } from 'lucide-react';
 import './GraphicalDashboard.css';
 
 // Register Chart.js components
@@ -461,7 +461,7 @@ const GraphicalDashboard = () => {
               </select>
             </div>
             <button className="refresh-btn" onClick={fetchDashboardData}>
-              <LuRefreshCw size={16} />
+              <RefreshCw size={16} />
               Refresh
             </button>
           </div>

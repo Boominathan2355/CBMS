@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LuGraduationCap, LuAlertCircle, LuUserPlus } from 'react-icons/lu';
+import { GraduationCap, AlertCircle, UserPlus } from 'lucide-react';
 import './Signup.css';
 
 const Signup = () => {
@@ -113,7 +113,7 @@ const Signup = () => {
       <div className="signup-card">
         <div className="signup-header">
           <div className="logo">
-            <span className="logo-icon"><LuGraduationCap size={32} /></span>
+            <span className="logo-icon"><GraduationCap size={32} /></span>
             <span className="logo-text">CBMS</span>
           </div>
           <h1 className="signup-title">Create Account</h1>
@@ -123,7 +123,7 @@ const Signup = () => {
         <form onSubmit={handleSubmit} className="signup-form">
           {errors.submit && (
             <div className="alert alert-error">
-              <LuAlertCircle size={20} />
+              <AlertCircle size={20} />
               {errors.submit}
             </div>
           )}
@@ -259,7 +259,7 @@ const Signup = () => {
               </>
             ) : (
               <>
-                <LuUserPlus size={18} />
+                <UserPlus size={18} />
                 Create Account
               </>
             )}

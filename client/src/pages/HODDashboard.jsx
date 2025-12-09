@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { expenditureAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { LuCheckCircle, LuPaperclip, LuCheck, LuX } from 'react-icons/lu';
+import { CheckCircle, Paperclip, Check, X } from 'lucide-react';
 import './HODDashboard.css';
 
 const HODDashboard = () => {
@@ -121,7 +121,7 @@ const HODDashboard = () => {
         {expenditures.length === 0 ? (
           <div className="no-expenditures">
             <div className="no-expenditures-icon">
-              <LuCheckCircle size={18} />
+              <CheckCircle size={18} />
             </div>
             <h3>No Pending Approvals</h3>
             <p>All expenditures from your department have been processed.</p>
@@ -185,7 +185,7 @@ const HODDashboard = () => {
                             rel="noopener noreferrer"
                             className="attachment-link"
                           >
-                            <LuPaperclip size={14} />
+                            <Paperclip size={14} />
                             {attachment.originalName}
                           </a>
                         ))}
@@ -198,14 +198,14 @@ const HODDashboard = () => {
                       className="btn btn-success"
                       onClick={() => handleApprove(expenditure)}
                     >
-                      <LuCheck size={16} />
+                      <Check size={16} />
                       Approve
                     </button>
                     <button
                       className="btn btn-danger"
                       onClick={() => handleReject(expenditure)}
                     >
-                      <LuX size={16} />
+                      <X size={16} />
                       Reject
                     </button>
                   </div>
@@ -226,7 +226,7 @@ const HODDashboard = () => {
                 className="modal-close"
                 onClick={() => setShowApprovalModal(false)}
               >
-                <LuX size={20} />
+                <X size={20} />
               </button>
             </div>
 

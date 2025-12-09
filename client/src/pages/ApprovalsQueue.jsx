@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { expenditureAPI } from '../services/api';
-import { LuPaperclip, LuCheck, LuX, LuClipboardCheck } from 'react-icons/lu';
+import { Paperclip, Check, X, ClipboardCheck } from 'lucide-react';
 import './ApprovalsQueue.css';
 
 const ApprovalsQueue = () => {
@@ -242,7 +242,7 @@ const ApprovalsQueue = () => {
                   <div className="attachment-list">
                     {expenditure.attachments.map((attachment, index) => (
                       <div key={index} className="attachment-item">
-                        <LuPaperclip size={14} />
+                        <Paperclip size={14} />
                         <span className="attachment-name">{attachment.originalName}</span>
                       </div>
                     ))}
@@ -265,13 +265,13 @@ const ApprovalsQueue = () => {
                     className="btn btn-success"
                     onClick={() => handleApprove(expenditure)}
                   >
-                    <LuCheck size={16} /> Approve
+                    <Check size={16} /> Approve
                   </button>
                   <button
                     className="btn btn-danger"
                     onClick={() => handleReject(expenditure)}
                   >
-                    <LuX size={16} /> Reject
+                    <X size={16} /> Reject
                   </button>
                 </>
               )}
@@ -294,7 +294,7 @@ const ApprovalsQueue = () => {
       {expenditures.length === 0 && (
         <div className="no-expenditures">
           <div className="no-expenditures-icon">
-            <LuClipboardCheck size={48} />
+            <ClipboardCheck size={48} />
           </div>
           <h3>No Expenditures Found</h3>
           <p>No expenditures found matching the current filters.</p>
@@ -307,7 +307,7 @@ const ApprovalsQueue = () => {
             <div className="modal-header">
               <h2>{actionType === 'approve' ? 'Approve Expenditure' : 'Reject Expenditure'}</h2>
               <button className="close-btn" onClick={closeModal}>
-                <LuX size={20} />
+                <X size={20} />
               </button>
             </div>
             <div className="modal-body">

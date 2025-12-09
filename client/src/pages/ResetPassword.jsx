@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
-import { LuLock, LuEye, LuEyeOff, LuCheckCircle2, LuAlertCircle, LuGraduationCap } from 'react-icons/lu';
+import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle, GraduationCap } from 'lucide-react';
 import './ResetPassword.css';
 
 const ResetPassword = () => {
@@ -89,7 +89,7 @@ const ResetPassword = () => {
             <div className="reset-password-container">
                 <div className="reset-password-card">
                     <div className="success-icon">
-                        <LuCheckCircle2 size={64} />
+                        <CheckCircle2 size={64} />
                     </div>
                     <h1>Password Reset Successful!</h1>
                     <p className="success-message">
@@ -107,7 +107,7 @@ const ResetPassword = () => {
         <div className="reset-password-container">
             <div className="reset-password-card">
                 <div className="logo">
-                    <LuGraduationCap size={48} />
+                    <GraduationCap size={48} />
                     <h2>CBMS</h2>
                 </div>
 
@@ -118,7 +118,7 @@ const ResetPassword = () => {
 
                 {error && (
                     <div className="alert alert-error">
-                        <LuAlertCircle size={20} />
+                        <AlertCircle size={20} />
                         <span>{error}</span>
                     </div>
                 )}
@@ -126,7 +126,7 @@ const ResetPassword = () => {
                 <form onSubmit={handleSubmit} className="reset-password-form">
                     <div className="form-group">
                         <label htmlFor="newPassword">
-                            <LuLock size={18} />
+                            <Lock size={18} />
                             New Password
                         </label>
                         <div className="password-input-wrapper">
@@ -146,7 +146,7 @@ const ResetPassword = () => {
                                 className="password-toggle"
                                 onClick={() => togglePasswordVisibility('new')}
                             >
-                                {showPassword.new ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                                {showPassword.new ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
 
@@ -171,7 +171,7 @@ const ResetPassword = () => {
 
                     <div className="form-group">
                         <label htmlFor="confirmPassword">
-                            <LuLock size={18} />
+                            <Lock size={18} />
                             Confirm New Password
                         </label>
                         <div className="password-input-wrapper">
@@ -189,7 +189,7 @@ const ResetPassword = () => {
                                 className="password-toggle"
                                 onClick={() => togglePasswordVisibility('confirm')}
                             >
-                                {showPassword.confirm ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                                {showPassword.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
                     </div>

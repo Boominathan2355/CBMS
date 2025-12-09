@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { allocationAPI, expenditureAPI, departmentsAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { LuDollarSign, LuCreditCard, LuWallet, LuPieChart, LuList, LuReceipt } from 'react-icons/lu';
+import { DollarSign, CreditCard, Wallet, PieChart, List, Receipt } from 'lucide-react';
 import './ConsolidatedDashboard.css';
 
 const ConsolidatedDashboard = () => {
@@ -151,7 +151,7 @@ const ConsolidatedDashboard = () => {
         <div className="overview-stats">
           <div className="stat-card primary">
             <div className="stat-icon">
-              <LuDollarSign size={32} />
+              <DollarSign size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{formatCurrency(stats.summary.totalAllocated)}</div>
@@ -160,7 +160,7 @@ const ConsolidatedDashboard = () => {
           </div>
           <div className="stat-card success">
             <div className="stat-icon">
-              <LuCreditCard size={32} />
+              <CreditCard size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{formatCurrency(stats.summary.totalSpent)}</div>
@@ -169,7 +169,7 @@ const ConsolidatedDashboard = () => {
           </div>
           <div className="stat-card warning">
             <div className="stat-icon">
-              <LuWallet size={32} />
+              <Wallet size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{formatCurrency(stats.summary.totalRemaining)}</div>
@@ -178,7 +178,7 @@ const ConsolidatedDashboard = () => {
           </div>
           <div className="stat-card info">
             <div className="stat-icon">
-              <LuPieChart size={32} />
+              <PieChart size={32} />
             </div>
             <div className="stat-info">
               <div className="stat-number">{stats.summary.utilizationPercentage}%</div>
@@ -227,11 +227,11 @@ const ConsolidatedDashboard = () => {
 
                 <div className="department-meta">
                   <div className="meta-item">
-                    <LuList size={14} />
+                    <List size={14} />
                     <span>{dept.allocationCount} Allocations</span>
                   </div>
                   <div className="meta-item">
-                    <LuReceipt size={14} />
+                    <Receipt size={14} />
                     <span>{dept.expenditureCount} Expenditures</span>
                   </div>
                 </div>
@@ -246,7 +246,7 @@ const ConsolidatedDashboard = () => {
             {expenditures.slice(0, 10).map((expenditure) => (
               <div key={expenditure._id} className="activity-item">
                 <div className="activity-icon">
-                  <LuReceipt size={20} />
+                  <Receipt size={20} />
                 </div>
                 <div className="activity-content">
                   <div className="activity-title">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { budgetHeadsAPI } from '../services/api';
-import { LuPlus, LuPencil, LuTrash2, LuX, LuDollarSign } from 'react-icons/lu';
+import { Plus, Pencil, Trash2, X, DollarSign } from 'lucide-react';
 import './BudgetHeads.css';
 
 const BudgetHeads = () => {
@@ -169,7 +169,7 @@ const BudgetHeads = () => {
       <div className="budget-heads-header">
         <h1>Budget Heads Management</h1>
         <button className="btn btn-primary" onClick={openModal}>
-          <LuPlus size={18} /> Add Budget Head
+          <Plus size={18} /> Add Budget Head
         </button>
       </div>
 
@@ -280,13 +280,13 @@ const BudgetHeads = () => {
                 className="btn btn-sm btn-secondary"
                 onClick={() => handleEdit(head)}
               >
-                <LuPencil size={16} /> Edit
+                <Pencil size={16} /> Edit
               </button>
               <button
                 className="btn btn-sm btn-danger"
                 onClick={() => handleDelete(head._id)}
               >
-                <LuTrash2 size={16} /> Delete
+                <Trash2 size={16} /> Delete
               </button>
             </div>
           </div>
@@ -296,7 +296,7 @@ const BudgetHeads = () => {
       {budgetHeads.length === 0 && (
         <div className="no-budget-heads">
           <div className="no-budget-heads-icon">
-            <LuDollarSign size={48} />
+            <DollarSign size={48} />
           </div>
           <h3>No Budget Heads Found</h3>
           <p>No budget heads found matching the current filters.</p>
@@ -309,7 +309,7 @@ const BudgetHeads = () => {
             <div className="modal-header">
               <h2>{editingBudgetHead ? 'Edit Budget Head' : 'Add New Budget Head'}</h2>
               <button className="close-btn" onClick={closeModal}>
-                <LuX size={20} />
+                <X size={20} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { settingsAPI } from '../services/api';
-import { LuSettings, LuDollarSign, LuBell, LuShield, LuServer, LuRotateCcw, LuSave } from 'react-icons/lu';
+import { Settings as SettingsIcon, DollarSign, Bell, Shield, Server, RotateCcw, Save } from 'lucide-react';
 import './Settings.css';
 
 const Settings = () => {
@@ -13,11 +13,11 @@ const Settings = () => {
   const [formData, setFormData] = useState({});
 
   const tabs = [
-    { id: 'general', label: 'General', icon: <LuSettings /> },
-    { id: 'budget', label: 'Budget', icon: <LuDollarSign /> },
-    { id: 'notifications', label: 'Notifications', icon: <LuBell /> },
-    { id: 'security', label: 'Security', icon: <LuShield /> },
-    { id: 'system', label: 'System', icon: <LuServer /> }
+    { id: 'general', label: 'General', icon: <SettingsIcon /> },
+    { id: 'budget', label: 'Budget', icon: <DollarSign /> },
+    { id: 'notifications', label: 'Notifications', icon: <Bell /> },
+    { id: 'security', label: 'Security', icon: <Shield /> },
+    { id: 'system', label: 'System', icon: <Server /> }
   ];
 
   useEffect(() => {
@@ -153,7 +153,7 @@ const Settings = () => {
             <div className="panel-header">
               <h2>{tabs.find(tab => tab.id === activeTab).label} Settings</h2>
               <button className="btn btn-secondary" onClick={handleReset}>
-                <LuRotateCcw size={16} /> Reset to Default
+                <RotateCcw size={16} /> Reset to Default
               </button>
             </div>
 
@@ -587,7 +587,7 @@ const Settings = () => {
 
               <div className="form-actions">
                 <button type="submit" className="btn btn-primary">
-                  <LuSave size={16} /> Save Settings
+                  <Save size={16} /> Save Settings
                 </button>
               </div>
             </form>

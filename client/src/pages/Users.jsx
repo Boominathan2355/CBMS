@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usersAPI, departmentsAPI } from '../services/api';
-import { LuUserPlus, LuPencil, LuTrash2, LuX } from 'react-icons/lu';
+import { UserPlus, Pencil, Trash2, X } from 'lucide-react';
 import './Users.css';
 
 const Users = () => {
@@ -174,7 +174,7 @@ const Users = () => {
         <h1>Users Management</h1>
         <div className="header-actions">
           <button className="btn btn-secondary" onClick={() => window.location.href = '/signup'}>
-            <LuUserPlus size={18} /> Add New User
+            <UserPlus size={18} /> Add New User
           </button>
         </div>
       </div>
@@ -312,14 +312,14 @@ const Users = () => {
                       className="btn btn-sm btn-secondary"
                       onClick={() => handleEdit(user)}
                     >
-                      <LuPencil size={16} />
+                      <Pencil size={16} />
                     </button>
                     {user.role !== 'admin' && (
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() => handleDelete(user._id)}
                       >
-                        <LuTrash2 size={16} />
+                        <Trash2 size={16} />
                       </button>
                     )}
                   </div>
@@ -336,7 +336,7 @@ const Users = () => {
             <div className="modal-header">
               <h2>Edit User</h2>
               <button className="close-btn" onClick={closeModal}>
-                <LuX size={20} />
+                <X size={20} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">

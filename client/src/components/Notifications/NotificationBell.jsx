@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { notificationAPI } from '../../services/api';
-import { LuBell, LuFileText, LuCheckCircle, LuXCircle, LuDollarSign, LuAlertTriangle, LuClock, LuMegaphone, LuTrash2 } from 'react-icons/lu';
+import { Bell, FileText, CheckCircle, XCircle, DollarSign, AlertTriangle, Clock, Megaphone, Trash2 } from 'lucide-react';
 import './NotificationBell.css';
 
 const NotificationBell = () => {
@@ -94,16 +94,16 @@ const NotificationBell = () => {
 
   const getTypeIcon = (type) => {
     const icons = {
-      expenditure_submitted: <LuFileText />,
-      expenditure_verified: <LuCheckCircle />,
-      expenditure_approved: <LuCheckCircle />,
-      expenditure_rejected: <LuXCircle />,
-      budget_allocation_created: <LuDollarSign />,
-      budget_exhaustion_warning: <LuAlertTriangle />,
-      approval_reminder: <LuClock />,
-      system_announcement: <LuMegaphone />
+      expenditure_submitted: <FileText />,
+      expenditure_verified: <CheckCircle />,
+      expenditure_approved: <CheckCircle />,
+      expenditure_rejected: <XCircle />,
+      budget_allocation_created: <DollarSign />,
+      budget_exhaustion_warning: <AlertTriangle />,
+      approval_reminder: <Clock />,
+      system_announcement: <Megaphone />
     };
-    return icons[type] || <LuFileText />;
+    return icons[type] || <FileText />;
   };
 
   const handleNotificationClick = (notification) => {
@@ -124,7 +124,7 @@ const NotificationBell = () => {
         className="bell-button"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <LuBell size={20} />
+        <Bell size={20} />
         {unreadCount > 0 && (
           <span className="notification-badge">{unreadCount}</span>
         )}
@@ -147,7 +147,7 @@ const NotificationBell = () => {
           <div className="notification-list">
             {notifications.length === 0 ? (
               <div className="no-notifications">
-                <LuBell size={48} />
+                <Bell size={48} />
                 <p>No notifications</p>
               </div>
             ) : (
@@ -190,7 +190,7 @@ const NotificationBell = () => {
                       className="delete-btn"
                       title="Delete notification"
                     >
-                      <LuTrash2 size={16} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usersAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { LuCrown, LuUsers, LuUserCheck, LuUserX } from 'react-icons/lu';
+import { Crown, Users, UserCheck, UserX } from 'lucide-react';
 import './DepartmentUsers.css';
 
 const DepartmentUsers = () => {
@@ -176,7 +176,7 @@ const DepartmentUsers = () => {
             <div className="user-actions">
               {user.role === 'hod' && (
                 <div className="hod-badge">
-                  <LuCrown size={14} />
+                  <Crown size={14} />
                   HOD
                 </div>
               )}
@@ -188,7 +188,7 @@ const DepartmentUsers = () => {
       {departmentUsers.length === 0 && (
         <div className="no-users">
           <div className="no-users-icon">
-            <LuUsers size={20} />
+            <Users size={20} />
           </div>
           <h3>No Users Found</h3>
           <p>No users found in your department matching the current filters.</p>
@@ -198,7 +198,7 @@ const DepartmentUsers = () => {
       <div className="department-stats">
         <div className="stats-card">
           <div className="stat-icon">
-            <LuUsers size={20} />
+            <Users size={20} />
           </div>
           <div className="stat-info">
             <div className="stat-number">{departmentUsers.length}</div>
@@ -207,7 +207,7 @@ const DepartmentUsers = () => {
         </div>
         <div className="stats-card">
           <div className="stat-icon">
-            <LuUserCheck size={20} />
+            <UserCheck size={20} />
           </div>
           <div className="stat-info">
             <div className="stat-number">
@@ -218,7 +218,7 @@ const DepartmentUsers = () => {
         </div>
         <div className="stats-card">
           <div className="stat-icon">
-            <LuUserX size={20} />
+            <UserX size={20} />
           </div>
           <div className="stat-info">
             <div className="stat-number">
@@ -229,7 +229,7 @@ const DepartmentUsers = () => {
         </div>
         <div className="stats-card">
           <div className="stat-icon">
-            <LuCrown size={20} />
+            <Crown size={20} />
           </div>
           <div className="stat-info">
             <div className="stat-number">

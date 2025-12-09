@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
-import { LuMail, LuArrowLeft, LuCheckCircle2, LuAlertCircle, LuGraduationCap } from 'react-icons/lu';
+import { Mail, ArrowLeft, CheckCircle2, AlertCircle, GraduationCap } from 'lucide-react';
 import './ForgotPassword.css';
 
 const ForgotPassword = () => {
@@ -35,7 +35,7 @@ const ForgotPassword = () => {
             <div className="forgot-password-container">
                 <div className="forgot-password-card">
                     <div className="success-icon">
-                        <LuCheckCircle2 size={64} />
+                        <CheckCircle2 size={64} />
                     </div>
                     <h1>Check Your Email</h1>
                     <p className="success-message">
@@ -47,7 +47,7 @@ const ForgotPassword = () => {
                     </p>
                     <div className="action-links">
                         <Link to="/login" className="btn btn-primary">
-                            <LuArrowLeft size={18} />
+                            <ArrowLeft size={18} />
                             Back to Login
                         </Link>
                     </div>
@@ -72,7 +72,7 @@ const ForgotPassword = () => {
         <div className="forgot-password-container">
             <div className="forgot-password-card">
                 <div className="logo">
-                    <LuGraduationCap size={48} />
+                    <GraduationCap size={48} />
                     <h2>CBMS</h2>
                 </div>
 
@@ -83,7 +83,7 @@ const ForgotPassword = () => {
 
                 {error && (
                     <div className="alert alert-error">
-                        <LuAlertCircle size={20} />
+                        <AlertCircle size={20} />
                         <span>{error}</span>
                     </div>
                 )}
@@ -91,7 +91,7 @@ const ForgotPassword = () => {
                 <form onSubmit={handleSubmit} className="forgot-password-form">
                     <div className="form-group">
                         <label htmlFor="email">
-                            <LuMail size={18} />
+                            <Mail size={18} />
                             Email Address
                         </label>
                         <input
@@ -116,7 +116,7 @@ const ForgotPassword = () => {
 
                 <div className="back-to-login">
                     <Link to="/login">
-                        <LuArrowLeft size={16} />
+                        <ArrowLeft size={16} />
                         Back to Login
                     </Link>
                 </div>

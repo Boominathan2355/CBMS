@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { reportAPI, departmentsAPI, budgetHeadsAPI, usersAPI } from '../services/api';
-import { LuReceipt, LuDollarSign, LuPieChart, LuClipboardList, LuDownload } from 'react-icons/lu';
+import { Receipt, DollarSign, PieChart, ClipboardList, Download } from 'lucide-react';
 import './Reports.css';
 
 const Reports = () => {
@@ -395,28 +395,28 @@ const Reports = () => {
               className={`type-btn ${reportType === 'expenditures' ? 'active' : ''}`}
               onClick={() => handleReportTypeChange('expenditures')}
             >
-              <LuReceipt size={24} />
+              <Receipt size={24} />
               Expenditure Report
             </button>
             <button
               className={`type-btn ${reportType === 'allocations' ? 'active' : ''}`}
               onClick={() => handleReportTypeChange('allocations')}
             >
-              <LuDollarSign size={24} />
+              <DollarSign size={24} />
               Allocation Report
             </button>
             <button
               className={`type-btn ${reportType === 'dashboard' ? 'active' : ''}`}
               onClick={() => handleReportTypeChange('dashboard')}
             >
-              <LuPieChart size={24} />
+              <PieChart size={24} />
               Dashboard Report
             </button>
             <button
               className={`type-btn ${reportType === 'audit' ? 'active' : ''}`}
               onClick={() => handleReportTypeChange('audit')}
             >
-              <LuClipboardList size={24} />
+              <ClipboardList size={24} />
               Audit Report
             </button>
           </div>
@@ -543,7 +543,7 @@ const Reports = () => {
               </>
             ) : (
               <>
-                <LuDownload size={16} />
+                <Download size={16} />
                 Generate Report
               </>
             )}
