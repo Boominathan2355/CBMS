@@ -1,6 +1,6 @@
 /* Graphical Dashboard - Premium Glass Theme */
 .graphical-dashboard-container {
-  padding: 0;
+  padding: 10px;
   max-width: 1600px;
   margin: 0 auto;
   min-height: 100vh;
@@ -132,6 +132,10 @@
   box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
 }
 
+.chart-card.full-width {
+  grid-column: 1 / -1;
+}
+
 .chart-header h3 {
   color: var(--text-primary);
   margin: 0 0 0.5rem 0;
@@ -170,6 +174,36 @@
   background: var(--success);
   border-radius: 50%;
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+/* No Data Message */
+.no-data-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  text-align: center;
+  gap: 1rem;
+}
+
+.no-data-message svg {
+  color: var(--border-medium);
+  opacity: 0.5;
+}
+
+.no-data-message p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.no-data-message .no-data-hint {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  max-width: 300px;
 }
 
 @media (max-width: 1024px) {

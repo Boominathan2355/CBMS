@@ -18,6 +18,9 @@ const auditLogRoutes = require('./routes/auditLogs');
 const reportRoutes = require('./routes/reports');
 const systemRoutes = require('./routes/system');
 
+// Import services
+const { initReminderService } = require('./services/reminderService');
+
 const app = express();
 
 // Middleware
@@ -109,6 +112,10 @@ const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
+
+    // Initialize reminder service after DB connection
+    initReminderService();
+
     app.listen(PORT, () => {
       console.log(`🚀 CBMS Server is running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);

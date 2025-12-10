@@ -7,7 +7,7 @@ const path = require('path');
 const uploadFiles = async (req, res) => {
   try {
     const uploadedFiles = req.uploadedFiles || [];
-    
+
     if (uploadedFiles.length === 0) {
       return res.status(400).json({
         success: false,
@@ -15,14 +15,27 @@ const uploadFiles = async (req, res) => {
       });
     }
 
-    res.json({
+    const response = {
       success: true,
       message: 'Files uploaded successfully',
       data: {
         files: uploadedFiles,
         count: uploadedFiles.length
       }
-    });
+    };
+
+    // Include virus scan results if available
+    if (req.virusScanResults) {
+      response.data.virusScan = req.virusScanResults;
+
+      if (req.virusScanResults.skipped > 0) {
+        response.message += ' (virus scanning skipped in dev mode)';
+      } else {
+        response.message += ' and scanned for viruses';
+      }
+    }
+
+    res.json(response);
   } catch (error) {
     console.error('File upload error:', error);
     res.status(500).json({
@@ -38,7 +51,7 @@ const uploadFiles = async (req, res) => {
 const getFileInfo = async (req, res) => {
   try {
     const { fileId } = req.params;
-    
+
     // In a real implementation, you'd query the database for file metadata
     // For now, return mock data
     res.json({
@@ -68,12 +81,12 @@ const getFileInfo = async (req, res) => {
 const deleteFileById = async (req, res) => {
   try {
     const { fileId } = req.params;
-    
+
     // In a real implementation, you'd:
     // 1. Query database for file path
     // 2. Delete file from storage
     // 3. Remove database record
-    
+
     // For now, return success
     res.json({
       success: true,
@@ -94,7 +107,7 @@ const deleteFileById = async (req, res) => {
 const getDownloadUrl = async (req, res) => {
   try {
     const { fileId } = req.params;
-    
+
     // In a real implementation, you'd generate a signed URL for S3
     // For now, return a mock URL
     res.json({
@@ -119,9 +132,9 @@ const getDownloadUrl = async (req, res) => {
 const cleanupFiles = async (req, res) => {
   try {
     const { olderThanDays = 30 } = req.body;
-    
+
     cleanupOldFiles(olderThanDays);
-    
+
     res.json({
       success: true,
       message: `Cleaned up files older than ${olderThanDays} days`

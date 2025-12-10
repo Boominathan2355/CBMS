@@ -203,9 +203,45 @@
 
 .info-item span {
   font-size: 1rem;
-  color: var(--text-primary);
   font-weight: 600;
   font-family: monospace;
+}
+
+/* Form Helper Elements */
+.help-text {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.section-title {
+  margin: 2rem 0 1rem 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 0.5rem;
+}
+
+.section-title:first-child {
+  margin-top: 0;
+}
+
+.info-box {
+  background: rgba(102, 126, 234, 0.1);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+}
+
+.info-box p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 /* Responsive */

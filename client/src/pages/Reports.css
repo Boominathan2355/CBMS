@@ -1,6 +1,6 @@
 /* Reports Page - Premium Glass Theme */
 .reports-container {
-  padding: 0;
+  padding: 8px;
   max-width: 100%;
   animation: slideUpFade 0.5s ease-out;
 }

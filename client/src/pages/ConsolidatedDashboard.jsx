@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { allocationAPI, expenditureAPI, departmentsAPI } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { allocationAPI, expenditureAPI, departmentsAPI, reportAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { DollarSign, CreditCard, Wallet, PieChart, List, Receipt } from 'lucide-react';
+import { DollarSign, CreditCard, Wallet, PieChart, List, Receipt, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
 import './ConsolidatedDashboard.css';
 
 const ConsolidatedDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [allocations, setAllocations] = useState([]);
   const [expenditures, setExpenditures] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [stats, setStats] = useState(null);
+  const [yearComparison, setYearComparison] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState('');
-  const [selectedFinancialYear, setSelectedFinancialYear] = useState('2024-25');
+  const [selectedFinancialYear, setSelectedFinancialYear] = useState('2024-2025');
 
   useEffect(() => {
     fetchData();
@@ -27,17 +30,30 @@ const ConsolidatedDashboard = () => {
       if (selectedDepartment) params.departmentId = selectedDepartment;
       if (selectedFinancialYear) params.financialYear = selectedFinancialYear;
 
-      const [allocationsResponse, expendituresResponse, departmentsResponse, statsResponse] = await Promise.all([
+      const [
+        allocationsResponse,
+        expendituresResponse,
+        departmentsResponse,
+        statsResponse,
+        dashboardReportResponse
+      ] = await Promise.all([
         allocationAPI.getAllocations(params),
         expenditureAPI.getExpenditures(params),
         departmentsAPI.getDepartments(),
-        allocationAPI.getAllocationStats(params)
+        allocationAPI.getAllocationStats(params),
+        reportAPI.getDashboardReport({ financialYear: selectedFinancialYear, includeComparison: 'true' })
       ]);
 
       setAllocations(allocationsResponse.data.data.allocations);
       setExpenditures(expendituresResponse.data.data.expenditures);
       setDepartments(departmentsResponse.data.data.departments);
       setStats(statsResponse.data.data);
+
+      // Set year comparison data if available
+      if (dashboardReportResponse.data.data.consolidated.yearComparison) {
+        setYearComparison(dashboardReportResponse.data.data.consolidated.yearComparison);
+      }
+
       setError(null);
     } catch (err) {
       setError('Failed to fetch consolidated data');
@@ -140,9 +156,9 @@ const ConsolidatedDashboard = () => {
             onChange={(e) => setSelectedFinancialYear(e.target.value)}
             className="filter-select"
           >
-            <option value="2024-25">2024-25</option>
-            <option value="2023-24">2023-24</option>
-            <option value="2022-23">2022-23</option>
+            <option value="2024-2025">2024-2025</option>
+            <option value="2023-2024">2023-2024</option>
+            <option value="2022-2023">2022-2023</option>
           </select>
         </div>
       </div>
@@ -188,12 +204,121 @@ const ConsolidatedDashboard = () => {
         </div>
       )}
 
+      {yearComparison && yearComparison.summary ? (
+        <div className="year-comparison-section">
+          <h2>Year-over-Year Comparison</h2>
+          <div className="comparison-cards">
+            <div className="comparison-card">
+              <div className="comparison-header">
+                <h3>Total Budget Allocated</h3>
+                <div className="trend-icon">
+                  {yearComparison.summary.changes.allocatedChange >= 0 ? (
+                    <TrendingUp size={20} className="trend-up" />
+                  ) : (
+                    <TrendingDown size={20} className="trend-down" />
+                  )}
+                </div>
+              </div>
+              <div className="comparison-values">
+                <div className="value-row">
+                  <span className="label">Previous Year ({yearComparison.previousYear}):</span>
+                  <span className="value">{formatCurrency(yearComparison.summary.previous.totalAllocated)}</span>
+                </div>
+                <div className="value-row">
+                  <span className="label">Current Year ({yearComparison.currentYear}):</span>
+                  <span className="value">{formatCurrency(yearComparison.summary.current.totalAllocated)}</span>
+                </div>
+                <div className="change-indicator">
+                  <span className={yearComparison.summary.changes.allocatedChange >= 0 ? 'positive' : 'negative'}>
+                    {yearComparison.summary.changes.allocatedChange >= 0 ? '+' : ''}
+                    {yearComparison.summary.changes.allocatedChange.toFixed(2)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="comparison-card">
+              <div className="comparison-header">
+                <h3>Total Expenses Incurred</h3>
+                <div className="trend-icon">
+                  {yearComparison.summary.changes.spentChange >= 0 ? (
+                    <TrendingUp size={20} className="trend-up" />
+                  ) : (
+                    <TrendingDown size={20} className="trend-down" />
+                  )}
+                </div>
+              </div>
+              <div className="comparison-values">
+                <div className="value-row">
+                  <span className="label">Previous Year ({yearComparison.previousYear}):</span>
+                  <span className="value">{formatCurrency(yearComparison.summary.previous.totalSpent)}</span>
+                </div>
+                <div className="value-row">
+                  <span className="label">Current Year ({yearComparison.currentYear}):</span>
+                  <span className="value">{formatCurrency(yearComparison.summary.current.totalSpent)}</span>
+                </div>
+                <div className="change-indicator">
+                  <span className={yearComparison.summary.changes.spentChange >= 0 ? 'warning' : 'positive'}>
+                    {yearComparison.summary.changes.spentChange >= 0 ? '+' : ''}
+                    {yearComparison.summary.changes.spentChange.toFixed(2)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="comparison-card">
+              <div className="comparison-header">
+                <h3>Fund Utilization Rate</h3>
+                <div className="trend-icon">
+                  {yearComparison.summary.changes.utilizationChange >= 0 ? (
+                    <TrendingUp size={20} className="trend-up" />
+                  ) : (
+                    <TrendingDown size={20} className="trend-down" />
+                  )}
+                </div>
+              </div>
+              <div className="comparison-values">
+                <div className="value-row">
+                  <span className="label">Previous Year ({yearComparison.previousYear}):</span>
+                  <span className="value">{yearComparison.summary.previous.utilization.toFixed(2)}%</span>
+                </div>
+                <div className="value-row">
+                  <span className="label">Current Year ({yearComparison.currentYear}):</span>
+                  <span className="value">{yearComparison.summary.current.utilization.toFixed(2)}%</span>
+                </div>
+                <div className="change-indicator">
+                  <span className={yearComparison.summary.changes.utilizationChange >= 0 ? 'neutral' : 'neutral'}>
+                    {yearComparison.summary.changes.utilizationChange >= 0 ? '+' : ''}
+                    {yearComparison.summary.changes.utilizationChange.toFixed(2)}% points
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="year-comparison-section">
+          <h2>Year-over-Year Comparison</h2>
+          <div className="no-data-message-section">
+            <AlertCircle size={64} />
+            <h3>No Previous Year Data Available</h3>
+            <p>Year-over-year comparison requires allocation and expenditure data for the previous financial year.</p>
+            <p className="no-data-hint">Please ensure data exists for both 2023-2024 and 2024-2025 financial years.</p>
+          </div>
+        </div>
+      )}
+
       <div className="dashboard-content">
         <div className="department-breakdown">
           <h2>Department-wise Breakdown</h2>
           <div className="department-cards">
             {departmentStats.map((dept) => (
-              <div key={dept._id} className="department-card">
+              <div
+                key={dept._id}
+                className="department-card"
+                onClick={() => navigate(`/department-detail/${dept._id}`)}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="department-header">
                   <h3 className="department-name">{dept.name}</h3>
                   <span className="department-code">{dept.code}</span>
@@ -276,7 +401,7 @@ const ConsolidatedDashboard = () => {
 
       <div className="budget-head-breakdown">
         <h2>Budget Head-wise Breakdown</h2>
-        <div className="breakdown-table">
+        <div className="breakdown-table table-responsive">
           <table>
             <thead>
               <tr>
@@ -290,16 +415,16 @@ const ConsolidatedDashboard = () => {
             <tbody>
               {stats?.budgetHeadStats.map((budgetHead) => (
                 <tr key={budgetHead.budgetHeadCode}>
-                  <td>
+                  <td data-label="Budget Head">
                     <div className="budget-head-info">
                       <span className="head-name">{budgetHead.budgetHeadName}</span>
                       <span className="head-code">{budgetHead.budgetHeadCode}</span>
                     </div>
                   </td>
-                  <td className="amount">{formatCurrency(budgetHead.totalAllocated)}</td>
-                  <td className="amount">{formatCurrency(budgetHead.totalSpent)}</td>
-                  <td className="amount">{formatCurrency(budgetHead.totalRemaining)}</td>
-                  <td>
+                  <td className="amount" data-label="Total Allocated">{formatCurrency(budgetHead.totalAllocated)}</td>
+                  <td className="amount" data-label="Total Spent">{formatCurrency(budgetHead.totalSpent)}</td>
+                  <td className="amount" data-label="Remaining">{formatCurrency(budgetHead.totalRemaining)}</td>
+                  <td data-label="Utilization">
                     <div className="utilization-cell">
                       <div className="utilization-bar-small">
                         <div

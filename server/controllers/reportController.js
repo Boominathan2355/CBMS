@@ -314,6 +314,7 @@ const getDashboardReport = async (req, res) => {
 
     // Department breakdown
     allocations.forEach(alloc => {
+      if (!alloc.department) return;
       const deptName = alloc.department.name;
       if (!consolidated.departmentBreakdown[deptName]) {
         consolidated.departmentBreakdown[deptName] = {
@@ -338,6 +339,7 @@ const getDashboardReport = async (req, res) => {
 
     // Budget head breakdown
     allocations.forEach(alloc => {
+      if (!alloc.budgetHead) return;
       const headName = alloc.budgetHead.name;
       if (!consolidated.budgetHeadBreakdown[headName]) {
         consolidated.budgetHeadBreakdown[headName] = {
@@ -368,7 +370,9 @@ const getDashboardReport = async (req, res) => {
 
     // Status breakdown
     expenditures.forEach(exp => {
-      consolidated.statusBreakdown[exp.status]++;
+      if (exp.status) {
+        consolidated.statusBreakdown[exp.status]++;
+      }
     });
 
     // Year comparison if requested
@@ -525,13 +529,14 @@ const getYearComparisonData = async (previousFY, currentFY) => {
 
     // Get all unique departments from both years
     const allDepartments = new Set([
-      ...prevAllocations.map(a => a.department.name),
-      ...currentAllocations.map(a => a.department.name)
+      ...prevAllocations.filter(a => a.department).map(a => a.department.name),
+      ...currentAllocations.filter(a => a.department).map(a => a.department.name)
     ]);
 
     allDepartments.forEach(deptName => {
-      const prevDeptAllocations = prevAllocations.filter(a => a.department.name === deptName);
-      const currentDeptAllocations = currentAllocations.filter(a => a.department.name === deptName);
+      // Filter safely checking if department exists
+      const prevDeptAllocations = prevAllocations.filter(a => a.department && a.department.name === deptName);
+      const currentDeptAllocations = currentAllocations.filter(a => a.department && a.department.name === deptName);
 
       const prevDeptAllocated = prevDeptAllocations.reduce((sum, alloc) => sum + alloc.allocatedAmount, 0);
       const prevDeptSpent = prevDeptAllocations.reduce((sum, alloc) => sum + alloc.spentAmount, 0);
@@ -547,21 +552,28 @@ const getYearComparisonData = async (previousFY, currentFY) => {
         ? ((currentDeptSpent - prevDeptSpent) / prevDeptSpent) * 100
         : 0;
 
+      const prevDeptUtilization = prevDeptAllocated > 0 ? (prevDeptSpent / prevDeptAllocated) * 100 : 0;
+      const currentDeptUtilization = currentDeptAllocated > 0 ? (currentDeptSpent / currentDeptAllocated) * 100 : 0;
+
+      const utilizationChange = prevDeptUtilization > 0
+        ? currentDeptUtilization - prevDeptUtilization
+        : 0;
+
       departmentComparison[deptName] = {
         previous: {
           allocated: prevDeptAllocated,
           spent: prevDeptSpent,
-          utilization: prevDeptAllocated > 0 ? (prevDeptSpent / prevDeptAllocated) * 100 : 0
+          utilization: prevDeptUtilization
         },
         current: {
           allocated: currentDeptAllocated,
           spent: currentDeptSpent,
-          utilization: currentDeptAllocated > 0 ? (currentDeptSpent / currentDeptAllocated) * 100 : 0
+          utilization: currentDeptUtilization
         },
         changes: {
           allocatedChange,
           spentChange,
-          utilizationChange: departmentComparison[deptName]?.current?.utilization - departmentComparison[deptName]?.previous?.utilization || 0
+          utilizationChange
         }
       };
     });

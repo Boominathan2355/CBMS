@@ -292,16 +292,17 @@ const Dashboard = () => {
           </div>
           {recentExpenditures.map((expenditure) => (
             <div key={expenditure.id} className="table-row">
-              <span className="bill-number">{expenditure.billNumber}</span>
-              <span className="amount">{formatCurrency(expenditure.amount)}</span>
-              <span className="party">{expenditure.partyName}</span>
+              <span className="bill-number" data-label="Bill Number">{expenditure.billNumber}</span>
+              <span className="amount" data-label="Amount">{formatCurrency(expenditure.amount)}</span>
+              <span className="party" data-label="Party">{expenditure.partyName}</span>
               <span
                 className="status"
+                data-label="Status"
                 style={{ color: getStatusColor(expenditure.status) }}
               >
                 {getStatusIcon(expenditure.status)} {expenditure.status}
               </span>
-              <span className="date">{expenditure.date}</span>
+              <span className="date" data-label="Date">{expenditure.date}</span>
             </div>
           ))}
         </div>

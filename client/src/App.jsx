@@ -1,33 +1,37 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout/Layout';
+
+// Pages
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import SubmitExpenditure from './pages/SubmitExpenditure';
-import BudgetAllocations from './pages/BudgetAllocations';
-import ApprovalsQueue from './pages/ApprovalsQueue';
-import Reports from './pages/Reports';
-import Departments from './pages/Departments';
-import Users from './pages/Users';
-import DepartmentUsers from './pages/DepartmentUsers';
-import DepartmentDashboard from './pages/DepartmentDashboard';
-import ConsolidatedDashboard from './pages/ConsolidatedDashboard';
-import BudgetHeads from './pages/BudgetHeads';
-import Settings from './pages/Settings';
-import AuditLogs from './pages/AuditLogs';
-import Notifications from './pages/Notifications';
-import YearComparison from './pages/YearComparison';
-import ResubmitExpenditure from './pages/ResubmitExpenditure';
-import BulkUpload from './pages/BulkUpload';
-import HODDashboard from './pages/HODDashboard';
-import GraphicalDashboard from './pages/GraphicalDashboard';
-import Profile from './pages/Profile';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import ProtectedRoute from './components/ProtectedRoute';
+import Dashboard from './pages/Dashboard';
+import DepartmentDashboard from './pages/DepartmentDashboard';
+import HODDashboard from './pages/HODDashboard';
+import ConsolidatedDashboard from './pages/ConsolidatedDashboard';
+import GraphicalDashboard from './pages/GraphicalDashboard';
+import DepartmentDetail from './pages/DepartmentDetail';
+import BudgetAllocations from './pages/BudgetAllocations';
+import SubmitExpenditure from './pages/SubmitExpenditure';
+import ApprovalsQueue from './pages/ApprovalsQueue';
+import YearComparison from './pages/YearComparison';
+import Reports from './pages/Reports';
+import AuditLogs from './pages/AuditLogs';
+import Notifications from './pages/Notifications';
+import Settings from './pages/Settings';
+import Users from './pages/Users';
+import Departments from './pages/Departments';
+import BudgetHeads from './pages/BudgetHeads';
+import ResubmitExpenditure from './pages/ResubmitExpenditure';
+import BulkUpload from './pages/BulkUpload';
+import DepartmentUsers from './pages/DepartmentUsers';
+import Profile from './pages/Profile';
 import './App.css';
+
 
 function App() {
   return (
@@ -75,6 +79,7 @@ function App() {
               {/* Common Routes */}
               <Route path="notifications" element={<Notifications />} />
               <Route path="graphical-dashboard" element={<GraphicalDashboard />} />
+              <Route path="department-detail/:id" element={<DepartmentDetail />} />
               <Route path="profile" element={<Profile />} />
             </Route>
 
