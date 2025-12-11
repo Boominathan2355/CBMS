@@ -248,7 +248,7 @@ MongoDB service
 
 📄 License
 
-Licensed under the ISC License.
+Licensed under the MIT License.
 
 
 ---

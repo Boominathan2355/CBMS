@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { handleFileUpload, serveFiles } = require('../middleware/fileUpload');
+const { scanUploadedFiles } = require('../middleware/virusScan');
 const { uploadFiles, getFileInfo, deleteFileById, getDownloadUrl, cleanupFiles, getFileStats } = require('../controllers/fileController');
 const { verifyToken, authorize } = require('../middleware/auth');
 
-// File upload route
-router.post('/upload', verifyToken, handleFileUpload, uploadFiles);
+// File upload route - now includes virus scanning
+router.post('/upload', verifyToken, handleFileUpload, scanUploadedFiles, uploadFiles);
 
 // File serving route (public)
 router.get('/serve/:departmentId/:filename', serveFiles);

@@ -1,6 +1,6 @@
 /* Consolidated Dashboard - Premium Glass Theme */
 .consolidated-dashboard-container {
-  padding: 0;
+  padding: 10px;
   max-width: 1400px;
   margin: 0 auto;
   animation: slideUpFade 0.5s ease-out;
@@ -15,7 +15,7 @@
 .dashboard-header h1 {
   font-size: 2rem;
   font-weight: 800;
-  color: white;
+  color: black;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -141,12 +141,14 @@
   border-radius: var(--radius-xl);
   padding: 1.5rem;
   box-shadow: var(--glass-shadow);
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .department-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-7px) scale(1.02);
+  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
   background: var(--glass-bg-hover);
+  border-color: rgba(102, 126, 234, 0.5);
 }
 
 .department-header {
@@ -252,7 +254,7 @@
 }
 
 .breakdown-table th {
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.1);
   padding: 1rem;
   text-align: left;
   font-weight: 600;
@@ -264,8 +266,186 @@
   border-bottom: 1px solid var(--border-light);
 }
 
+/* Year Comparison Section */
+.year-comparison-section {
+  margin-bottom: 2.5rem;
+}
+
+.year-comparison-section h2 {
+  color: white;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.comparison-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
+}
+
+.comparison-card:hover {
+  transform: translateY(-5px);
+  background: var(--glass-bg-hover);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.comparison-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.comparison-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.trend-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.trend-up {
+  color: var(--success);
+}
+
+.trend-down {
+  color: var(--danger);
+}
+
+.comparison-values {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.comparison-values .value-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+.comparison-values .value-row .label {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.comparison-values .value-row .value {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.change-indicator {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.change-indicator span {
+  font-size: 1.25rem;
+  font-weight: 800;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.change-indicator .positive {
+  color: var(--success);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.change-indicator .negative {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.change-indicator .warning {
+  color: var(--warning);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.change-indicator .neutral {
+  color: var(--info);
+  background: rgba(14, 165, 233, 0.1);
+}
+
+/* No Data Message Section */
+.no-data-message-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.no-data-message-section svg {
+  color: var(--border-medium);
+  opacity: 0.5;
+}
+
+.no-data-message-section h3 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.no-data-message-section p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.no-data-message-section .no-data-hint {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
 @media (max-width: 1024px) {
   .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-cards {
     grid-template-columns: 1fr;
   }
 }

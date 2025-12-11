@@ -333,6 +333,8 @@ const Settings = () => {
 
               {activeTab === 'notifications' && (
                 <div className="form-section">
+                  <h3 className="section-title">Email Notifications</h3>
+
                   <div className="form-group">
                     <label className="checkbox-label">
                       <input
@@ -343,6 +345,7 @@ const Settings = () => {
                       />
                       Enable Email Notifications
                     </label>
+                    <small className="help-text">Receive email notifications for important events like submissions, approvals, and rejections</small>
                   </div>
 
                   <div className="form-group">
@@ -355,6 +358,7 @@ const Settings = () => {
                       />
                       Enable SMS Notifications
                     </label>
+                    <small className="help-text">Get SMS alerts for critical actions</small>
                   </div>
 
                   <div className="form-group">
@@ -367,6 +371,7 @@ const Settings = () => {
                       />
                       Enable Push Notifications
                     </label>
+                    <small className="help-text">Receive browser push notifications when logged in</small>
                   </div>
 
                   <div className="form-group">
@@ -378,37 +383,45 @@ const Settings = () => {
                       onChange={handleInputChange}
                     >
                       <option value="immediate">Immediate</option>
-                      <option value="hourly">Hourly</option>
-                      <option value="daily">Daily</option>
-                      <option value="weekly">Weekly</option>
+                      <option value="hourly">Hourly Digest</option>
+                      <option value="daily">Daily Digest</option>
+                      <option value="weekly">Weekly Digest</option>
                     </select>
+                    <small className="help-text">How often you want to receive notification emails</small>
+                  </div>
+
+                  <h3 className="section-title">Auto-Reminder Settings</h3>
+                  <div className="info-box">
+                    <p>Configure automatic reminder emails for pending approvals. The system checks daily at 9:00 AM and sends reminders to approvers with pending requests older than the configured threshold.</p>
                   </div>
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label htmlFor="reminderDays">Reminder Days</label>
+                      <label htmlFor="reminderDays">Pending Approval Reminder Threshold (Days)</label>
                       <input
                         type="number"
                         id="reminderDays"
                         name="reminderDays"
-                        value={formData.notifications?.reminderDays || ''}
+                        value={formData.notifications?.reminderDays || '5'}
                         onChange={handleInputChange}
                         min="1"
                         max="30"
                       />
+                      <small className="help-text">Send reminder emails for approvals pending longer than this many days (default: 5 days)</small>
                     </div>
 
                     <div className="form-group">
-                      <label htmlFor="escalationDays">Escalation Days</label>
+                      <label htmlFor="escalationDays">Escalation Threshold (Days)</label>
                       <input
                         type="number"
                         id="escalationDays"
                         name="escalationDays"
-                        value={formData.notifications?.escalationDays || ''}
+                        value={formData.notifications?.escalationDays || '10'}
                         onChange={handleInputChange}
                         min="1"
                         max="30"
                       />
+                      <small className="help-text">Number of days before escalating to higher authorities (default: 10 days)</small>
                     </div>
                   </div>
                 </div>

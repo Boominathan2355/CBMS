@@ -1,42 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  PointElement,
-  LineElement,
-  Filler,
-} from 'chart.js';
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import ReactECharts from 'echarts-for-react';
 import { allocationAPI, expenditureAPI, reportAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ErrorBoundary from '../components/ErrorBoundary';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, AlertCircle } from 'lucide-react';
 import './GraphicalDashboard.css';
-
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  PointElement,
-  LineElement,
-  Filler
-);
 
 const GraphicalDashboard = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
+  const [yearComparison, setYearComparison] = useState(null);
   const [timeRange, setTimeRange] = useState('current');
   const [refreshInterval, setRefreshInterval] = useState(null);
 
@@ -56,10 +30,10 @@ const GraphicalDashboard = () => {
     try {
       setLoading(true);
 
-      const [allocationResponse, expenditureResponse, reportResponse] = await Promise.all([
+      const [allocationResponse, expenditureResponse, reportResponse, comparisonReportResponse] = await Promise.all([
         allocationAPI.getAllocations({
           departmentId: user.role === 'department' ? user.department : undefined,
-          financialYear: timeRange === 'current' ? '2024-25' : '2023-24'
+          financialYear: timeRange === 'current' ? '2024-2025' : '2023-2024'
         }),
         expenditureAPI.getExpenditures({
           departmentId: user.role === 'department' ? user.department : undefined,
@@ -67,7 +41,13 @@ const GraphicalDashboard = () => {
         }),
         reportAPI.getDashboardReport({
           departmentId: user.role === 'department' ? user.department : undefined,
-          financialYear: timeRange === 'current' ? '2024-25' : '2023-24'
+          financialYear: timeRange === 'current' ? '2024-2025' : '2023-2024'
+        }),
+        // Fetch year comparison data for current year
+        reportAPI.getDashboardReport({
+          departmentId: user.role === 'department' ? user.department : undefined,
+          financialYear: '2024-2025',
+          includeComparison: 'true'
         })
       ]);
 
@@ -76,6 +56,11 @@ const GraphicalDashboard = () => {
         expenditures: expenditureResponse.data.data.expenditures || [],
         report: reportResponse.data.data || {}
       });
+
+      // Set year comparison data if available
+      if (comparisonReportResponse.data.data.consolidated.yearComparison) {
+        setYearComparison(comparisonReportResponse.data.data.consolidated.yearComparison);
+      }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
       // Set empty data structure to prevent crashes
@@ -97,18 +82,9 @@ const GraphicalDashboard = () => {
     }).format(amount);
   };
 
-  const getBudgetUtilizationChart = () => {
+  const getBudgetUtilizationOption = () => {
     if (!dashboardData || !dashboardData.allocations || dashboardData.allocations.length === 0) {
-      return {
-        labels: ['No Data'],
-        datasets: [{
-          label: 'No Data Available',
-          data: [0],
-          backgroundColor: 'rgba(200, 200, 200, 0.8)',
-          borderColor: 'rgba(200, 200, 200, 1)',
-          borderWidth: 1,
-        }]
-      };
+      return null;
     }
 
     const allocations = dashboardData.allocations;
@@ -118,45 +94,53 @@ const GraphicalDashboard = () => {
     const remainingData = allocations.map(allocation => allocation.remainingAmount);
 
     return {
-      labels,
-      datasets: [
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: (params) => {
+          return params.map(param =>
+            `${param.seriesName}: ${formatCurrency(param.value)}`
+          ).join('<br/>');
+        }
+      },
+      legend: {
+        data: ['Allocated', 'Spent', 'Remaining'],
+        top: 10
+      },
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+      xAxis: { type: 'category', data: labels },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          formatter: (value) => `₹${(value / 1000).toFixed(0)}K`
+        }
+      },
+      series: [
         {
-          label: 'Allocated',
+          name: 'Allocated',
+          type: 'bar',
           data: allocatedData,
-          backgroundColor: 'rgba(102, 126, 234, 0.8)',
-          borderColor: 'rgba(102, 126, 234, 1)',
-          borderWidth: 1,
+          itemStyle: { color: '#667eea' }
         },
         {
-          label: 'Spent',
+          name: 'Spent',
+          type: 'bar',
           data: spentData,
-          backgroundColor: 'rgba(40, 167, 69, 0.8)',
-          borderColor: 'rgba(40, 167, 69, 1)',
-          borderWidth: 1,
+          itemStyle: { color: '#28a745' }
         },
         {
-          label: 'Remaining',
+          name: 'Remaining',
+          type: 'bar',
           data: remainingData,
-          backgroundColor: 'rgba(255, 193, 7, 0.8)',
-          borderColor: 'rgba(255, 193, 7, 1)',
-          borderWidth: 1,
-        },
-      ],
+          itemStyle: { color: '#ffc107' }
+        }
+      ]
     };
   };
 
-  const getDepartmentComparisonChart = () => {
+  const getDepartmentComparisonOption = () => {
     if (!dashboardData || user.role === 'department' || !dashboardData.allocations || dashboardData.allocations.length === 0) {
-      return {
-        labels: ['No Data'],
-        datasets: [{
-          label: 'No Data Available',
-          data: [0],
-          backgroundColor: 'rgba(200, 200, 200, 0.8)',
-          borderColor: 'rgba(200, 200, 200, 1)',
-          borderWidth: 1,
-        }]
-      };
+      return null;
     }
 
     const departments = [...new Set(dashboardData.allocations.map(a => a.departmentName))];
@@ -166,50 +150,43 @@ const GraphicalDashboard = () => {
       const totalSpent = deptAllocations.reduce((sum, a) => sum + a.spentAmount, 0);
       return {
         department: dept,
-        allocated: totalAllocated,
-        spent: totalSpent,
         utilization: totalAllocated > 0 ? (totalSpent / totalAllocated) * 100 : 0
       };
     });
 
     return {
-      labels: departments,
-      datasets: [
-        {
-          label: 'Budget Utilization %',
-          data: departmentData.map(d => d.utilization),
-          backgroundColor: departmentData.map(d =>
-            d.utilization > 90 ? 'rgba(220, 53, 69, 0.8)' :
-              d.utilization > 75 ? 'rgba(255, 193, 7, 0.8)' :
-                d.utilization > 50 ? 'rgba(23, 162, 184, 0.8)' :
-                  'rgba(40, 167, 69, 0.8)'
-          ),
-          borderColor: departmentData.map(d =>
-            d.utilization > 90 ? 'rgba(220, 53, 69, 1)' :
-              d.utilization > 75 ? 'rgba(255, 193, 7, 1)' :
-                d.utilization > 50 ? 'rgba(23, 162, 184, 1)' :
-                  'rgba(40, 167, 69, 1)'
-          ),
-          borderWidth: 1,
-        },
-      ],
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: (params) => {
+          return `${params[0].name}<br/>${params[0].seriesName}: ${params[0].value.toFixed(2)}%`;
+        }
+      },
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+      xAxis: { type: 'category', data: departments },
+      yAxis: {
+        type: 'value',
+        max: 100,
+        axisLabel: { formatter: '{value}%' }
+      },
+      series: [{
+        name: 'Budget Utilization',
+        type: 'bar',
+        data: departmentData.map(d => ({
+          value: d.utilization,
+          itemStyle: {
+            color: d.utilization > 90 ? '#dc3545' :
+              d.utilization > 75 ? '#ffc107' :
+                d.utilization > 50 ? '#17a2b8' : '#28a745'
+          }
+        }))
+      }]
     };
   };
 
-  const getExpenditureTrendChart = () => {
+  const getExpenditureTrendOption = () => {
     if (!dashboardData || !dashboardData.expenditures || dashboardData.expenditures.length === 0) {
-      return {
-        labels: ['No Data'],
-        datasets: [{
-          label: 'No Data Available',
-          data: [0],
-          borderColor: 'rgba(200, 200, 200, 1)',
-          backgroundColor: 'rgba(200, 200, 200, 0.2)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-        }]
-      };
+      return null;
     }
 
     // Group expenditures by month
@@ -229,116 +206,118 @@ const GraphicalDashboard = () => {
     });
 
     return {
-      labels: sortedMonths,
-      datasets: [
-        {
-          label: 'Monthly Expenditure',
-          data: sortedMonths.map(month => monthlyData[month]),
-          borderColor: 'rgba(102, 126, 234, 1)',
-          backgroundColor: 'rgba(102, 126, 234, 0.2)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-        },
-      ],
+      tooltip: {
+        trigger: 'axis',
+        formatter: (params) => {
+          return `${params[0].name}<br/>${formatCurrency(params[0].value)}`;
+        }
+      },
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+      xAxis: { type: 'category', data: sortedMonths, boundaryGap: false },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          formatter: (value) => `₹${(value / 1000).toFixed(0)}K`
+        }
+      },
+      series: [{
+        name: 'Monthly Expenditure',
+        type: 'line',
+        smooth: true,
+        data: sortedMonths.map(month => monthlyData[month]),
+        areaStyle: { opacity: 0.3 },
+        itemStyle: { color: '#667eea' },
+        lineStyle: { width: 3 }
+      }]
     };
   };
 
-  const getBudgetHeadDistributionChart = () => {
+  const getBudgetHeadDistributionOption = () => {
     if (!dashboardData || !dashboardData.allocations || dashboardData.allocations.length === 0) {
-      return {
-        labels: ['No Data'],
-        datasets: [{
-          data: [100],
-          backgroundColor: ['rgba(200, 200, 200, 0.8)'],
-          borderColor: ['rgba(200, 200, 200, 1)'],
-          borderWidth: 2,
-        }]
-      };
+      return null;
     }
 
     const budgetHeads = [...new Set(dashboardData.allocations.map(a => a.budgetHeadName))];
     const budgetHeadData = budgetHeads.map(head => {
       const headAllocations = dashboardData.allocations.filter(a => a.budgetHeadName === head);
       return {
-        head,
-        amount: headAllocations.reduce((sum, a) => sum + a.allocatedAmount, 0)
+        name: head,
+        value: headAllocations.reduce((sum, a) => sum + a.allocatedAmount, 0)
       };
     });
 
-    const colors = [
-      'rgba(102, 126, 234, 0.8)',
-      'rgba(40, 167, 69, 0.8)',
-      'rgba(255, 193, 7, 0.8)',
-      'rgba(220, 53, 69, 0.8)',
-      'rgba(23, 162, 184, 0.8)',
-      'rgba(111, 66, 193, 0.8)',
-    ];
-
     return {
-      labels: budgetHeadData.map(d => d.head),
-      datasets: [
-        {
-          data: budgetHeadData.map(d => d.amount),
-          backgroundColor: colors.slice(0, budgetHeadData.length),
-          borderColor: colors.slice(0, budgetHeadData.length).map(c => c.replace('0.8', '1')),
-          borderWidth: 2,
-        },
-      ],
+      tooltip: {
+        trigger: 'item',
+        formatter: (params) => {
+          return `${params.name}<br/>${formatCurrency(params.value)} (${params.percent}%)`;
+        }
+      },
+      legend: { orient: 'vertical', left: 'left' },
+      series: [{
+        type: 'pie',
+        radius: '65%',
+        data: budgetHeadData,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        }
+      }]
     };
   };
 
-  const getChartOptions = (type) => {
-    const baseOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
-        },
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              return `${context.dataset.label}: ${formatCurrency(context.parsed.y || context.parsed)}`;
-            }
-          }
+  const getYearComparisonOption = () => {
+    if (!yearComparison || !yearComparison.departmentComparison) {
+      return null;
+    }
+
+    const departments = Object.keys(yearComparison.departmentComparison);
+    const previousYearData = departments.map(dept => yearComparison.departmentComparison[dept].previous.spent);
+    const currentYearData = departments.map(dept => yearComparison.departmentComparison[dept].current.spent);
+
+    return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: (params) => {
+          return params.map(param =>
+            `${param.seriesName}: ${formatCurrency(param.value)}`
+          ).join('<br/>');
         }
       },
+      legend: {
+        data: [
+          `${yearComparison.previousYear} (Previous Year)`,
+          `${yearComparison.currentYear} (Current Year)`
+        ],
+        top: 10
+      },
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+      xAxis: { type: 'category', data: departments },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          formatter: (value) => `₹${(value / 1000).toFixed(0)}K`
+        }
+      },
+      series: [
+        {
+          name: `${yearComparison.previousYear} (Previous Year)`,
+          type: 'bar',
+          data: previousYearData,
+          itemStyle: { color: '#969696' }
+        },
+        {
+          name: `${yearComparison.currentYear} (Current Year)`,
+          type: 'bar',
+          data: currentYearData,
+          itemStyle: { color: '#667eea' }
+        }
+      ]
     };
-
-    if (type === 'line') {
-      return {
-        ...baseOptions,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: function (value) {
-                return formatCurrency(value);
-              }
-            }
-          }
-        }
-      };
-    }
-
-    if (type === 'bar') {
-      return {
-        ...baseOptions,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: function (value) {
-                return formatCurrency(value);
-              }
-            }
-          }
-        }
-      };
-    }
-
-    return baseOptions;
   };
 
   const getDashboardTitle = () => {
@@ -362,34 +341,10 @@ const GraphicalDashboard = () => {
   const getKeyMetrics = () => {
     if (!dashboardData || !dashboardData.allocations || !dashboardData.expenditures) {
       return [
-        {
-          title: 'Total Budget',
-          value: '₹0',
-          icon: 'fas fa-wallet',
-          color: '#667eea',
-          change: '0%'
-        },
-        {
-          title: 'Total Spent',
-          value: '₹0',
-          icon: 'fas fa-chart-line',
-          color: '#28a745',
-          change: '0%'
-        },
-        {
-          title: 'Remaining Budget',
-          value: '₹0',
-          icon: 'fas fa-piggy-bank',
-          color: '#ffc107',
-          change: '0%'
-        },
-        {
-          title: 'Utilization Rate',
-          value: '0%',
-          icon: 'fas fa-percentage',
-          color: '#17a2b8',
-          change: '0%'
-        }
+        { title: 'Total Budget', value: '₹0', icon: 'fas fa-wallet', color: '#667eea', change: '0%' },
+        { title: 'Total Spent', value: '₹0', icon: 'fas fa-chart-line', color: '#28a745', change: '0%' },
+        { title: 'Remaining Budget', value: '₹0', icon: 'fas fa-piggy-bank', color: '#ffc107', change: '0%' },
+        { title: 'Utilization Rate', value: '0%', icon: 'fas fa-percentage', color: '#17a2b8', change: '0%' }
       ];
     }
 
@@ -402,27 +357,9 @@ const GraphicalDashboard = () => {
     const utilizationPercentage = totalAllocated > 0 ? (totalSpent / totalAllocated) * 100 : 0;
 
     return [
-      {
-        title: 'Total Budget',
-        value: formatCurrency(totalAllocated),
-        icon: 'fas fa-wallet',
-        color: '#667eea',
-        change: '+12.5%'
-      },
-      {
-        title: 'Total Spent',
-        value: formatCurrency(totalSpent),
-        icon: 'fas fa-chart-line',
-        color: '#28a745',
-        change: '+8.2%'
-      },
-      {
-        title: 'Remaining Budget',
-        value: formatCurrency(totalRemaining),
-        icon: 'fas fa-piggy-bank',
-        color: '#ffc107',
-        change: '-5.3%'
-      },
+      { title: 'Total Budget', value: formatCurrency(totalAllocated), icon: 'fas fa-wallet', color: '#667eea', change: '+12.5%' },
+      { title: 'Total Spent', value: formatCurrency(totalSpent), icon: 'fas fa-chart-line', color: '#28a745', change: '+8.2%' },
+      { title: 'Remaining Budget', value: formatCurrency(totalRemaining), icon: 'fas fa-piggy-bank', color: '#ffc107', change: '-5.3%' },
       {
         title: 'Utilization Rate',
         value: `${utilizationPercentage.toFixed(1)}%`,
@@ -437,7 +374,6 @@ const GraphicalDashboard = () => {
     return (
       <div className="graphical-dashboard-container">
         <div className="loading">
-          <div className="loading-spinner"></div>
           <p>Loading dashboard data...</p>
         </div>
       </div>
@@ -456,8 +392,8 @@ const GraphicalDashboard = () => {
             <div className="time-range-selector">
               <label>Time Range:</label>
               <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)}>
-                <option value="current">Current Year (2024-25)</option>
-                <option value="previous">Previous Year (2023-24)</option>
+                <option value="current">Current Year (2024-2025)</option>
+                <option value="previous">Previous Year (2023-2024)</option>
               </select>
             </div>
             <button className="refresh-btn" onClick={fetchDashboardData}>
@@ -492,7 +428,14 @@ const GraphicalDashboard = () => {
               <p>Allocated vs Spent vs Remaining</p>
             </div>
             <div className="chart-container">
-              <Bar data={getBudgetUtilizationChart()} options={getChartOptions('bar')} />
+              {getBudgetUtilizationOption() ? (
+                <ReactECharts option={getBudgetUtilizationOption()} style={{ height: '100%', width: '100%' }} />
+              ) : (
+                <div className="no-data-message">
+                  <AlertCircle size={48} />
+                  <p>No budget allocation data available</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -503,7 +446,14 @@ const GraphicalDashboard = () => {
               <p>Allocation by Budget Head</p>
             </div>
             <div className="chart-container">
-              <Doughnut data={getBudgetHeadDistributionChart()} options={getChartOptions('doughnut')} />
+              {getBudgetHeadDistributionOption() ? (
+                <ReactECharts option={getBudgetHeadDistributionOption()} style={{ height: '100%', width: '100%' }} />
+              ) : (
+                <div className="no-data-message">
+                  <AlertCircle size={48} />
+                  <p>No budget head data available</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -515,7 +465,14 @@ const GraphicalDashboard = () => {
                 <p>Budget utilization across departments</p>
               </div>
               <div className="chart-container">
-                <Bar data={getDepartmentComparisonChart()} options={getChartOptions('bar')} />
+                {getDepartmentComparisonOption() ? (
+                  <ReactECharts option={getDepartmentComparisonOption()} style={{ height: '100%', width: '100%' }} />
+                ) : (
+                  <div className="no-data-message">
+                    <AlertCircle size={48} />
+                    <p>No department data available</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -527,9 +484,41 @@ const GraphicalDashboard = () => {
               <p>Monthly expenditure pattern</p>
             </div>
             <div className="chart-container">
-              <Line data={getExpenditureTrendChart()} options={getChartOptions('line')} />
+              {getExpenditureTrendOption() ? (
+                <ReactECharts option={getExpenditureTrendOption()} style={{ height: '100%', width: '100%' }} />
+              ) : (
+                <div className="no-data-message">
+                  <AlertCircle size={48} />
+                  <p>No expenditure data available</p>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Year-over-Year Comparison */}
+          {user.role !== 'department' && (
+            <div className="chart-card full-width">
+              <div className="chart-header">
+                <h3>Year-over-Year Spending Comparison</h3>
+                {yearComparison ? (
+                  <p>Compare department spending: {yearComparison.previousYear} vs {yearComparison.currentYear}</p>
+                ) : (
+                  <p>No comparison data available</p>
+                )}
+              </div>
+              <div className="chart-container">
+                {getYearComparisonOption() ? (
+                  <ReactECharts option={getYearComparisonOption()} style={{ height: '100%', width: '100%' }} />
+                ) : (
+                  <div className="no-data-message">
+                    <AlertCircle size={48} />
+                    <p>No previous financial year data available</p>
+                    <p className="no-data-hint">Please ensure data exists for both current and previous financial years</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Real-time Status */}

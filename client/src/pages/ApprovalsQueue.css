@@ -1,10 +1,20 @@
 /* Approvals Queue - Premium Glass Theme */
 .approvals-queue-container {
-  padding: 0;
-  max-width: 100%;
+  padding: 20px;
+  max-width: 100%;  
   animation: slideUpFade 0.5s ease-out;
 }
-
+.no-expenditures {
+  color: black;
+  text-align: center;
+}
+.loading {
+  color: black;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} 
 .approvals-header {
   display: flex;
   justify-content: space-between;
@@ -17,7 +27,7 @@
 .approvals-header h1 {
   font-size: 2rem;
   font-weight: 800;
-  color: white;
+  color: black;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -202,7 +212,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  z-index: var(--z-overlay, 2000);
   animation: fadeIn 0.2s ease-out;
 }
 

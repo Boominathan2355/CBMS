@@ -3,15 +3,12 @@
   padding: 0;
   /* Handled by page-container */
   max-width: 100%;
+  
 }
-
-.loading-spinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 400px;
-  color: white;
+.dashboard-container p {
+  text-align: center;
+  font-size: 18px;
+  color: black; 
 }
 
 /* Quick Actions */

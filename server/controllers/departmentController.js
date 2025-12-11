@@ -300,11 +300,203 @@ const getDepartmentStats = async (req, res) => {
   }
 };
 
+
+// @desc    Get comprehensive department detail with allocations and expenditures
+// @route   GET /api/departments/:id/detail
+// @access  Private (Department users can view their own, others need office/admin/management roles)
+const getDepartmentDetail = async (req, res) => {
+  try {
+    const departmentId = req.params.id;
+    const { financialYear = getCurrentFinancialYear() } = req.query;
+
+    // Check authorization: user must be from this department or have elevated privileges
+    const allowedRoles = ['admin', 'office', 'vice_principal', 'principal', 'hod'];
+    const isAuthorized = allowedRoles.includes(req.user.role) ||
+      (req.user.role === 'department' && req.user.department.toString() === departmentId);
+
+    if (!isAuthorized) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to view this department detail'
+      });
+    }
+
+    // Get department info
+    const department = await Department.findById(departmentId);
+    if (!department) {
+      return res.status(404).json({
+        success: false,
+        message: 'Department not found'
+      });
+    }
+
+    // Get allocations for this department
+    const Allocation = require('../models/Allocation');
+    const allocations = await Allocation.find({
+      department: departmentId,
+      financialYear
+    })
+      .populate('budgetHead', 'name category code')
+      .populate('createdBy', 'name email')
+      .sort({ createdAt: -1 });
+
+    // Get expenditures for this department
+    const Expenditure = require('../models/Expenditure');
+    const expenditures = await Expenditure.find({
+      department: departmentId,
+      financialYear
+    })
+      .populate('budgetHead', 'name category code')
+      .populate('submittedBy', 'name email')
+      .populate('approvalSteps.approver', 'name email role')
+      .sort({ billDate: -1 });
+
+    // Calculate statistics
+    const totalAllocated = allocations.reduce((sum, alloc) => sum + alloc.allocatedAmount, 0);
+    const totalSpent = allocations.reduce((sum, alloc) => sum + alloc.spentAmount, 0);
+    const totalRemaining = totalAllocated - totalSpent;
+    const utilizationPercentage = totalAllocated > 0 ? (totalSpent / totalAllocated) * 100 : 0;
+
+    // Expenditure status breakdown
+    const statusBreakdown = {
+      pending: expenditures.filter(e => e.status === 'pending').length,
+      verified: expenditures.filter(e => e.status === 'verified').length,
+      approved: expenditures.filter(e => e.status === 'approved').length,
+      rejected: expenditures.filter(e => e.status === 'rejected').length
+    };
+
+    // Budget head-wise breakdown
+    const budgetHeadBreakdown = {};
+    allocations.forEach(alloc => {
+      const headName = alloc.budgetHead.name;
+      if (!budgetHeadBreakdown[headName]) {
+        budgetHeadBreakdown[headName] = {
+          budgetHeadId: alloc.budgetHead._id,
+          budgetHeadCode: alloc.budgetHead.code,
+          allocated: 0,
+          spent: 0,
+          remaining: 0,
+          utilization: 0
+        };
+      }
+      budgetHeadBreakdown[headName].allocated += alloc.allocatedAmount;
+      budgetHeadBreakdown[headName].spent += alloc.spentAmount;
+      budgetHeadBreakdown[headName].remaining += alloc.remainingAmount;
+    });
+
+    // Calculate utilization for each budget head
+    Object.keys(budgetHeadBreakdown).forEach(head => {
+      const data = budgetHeadBreakdown[head];
+      data.utilization = data.allocated > 0 ? (data.spent / data.allocated) * 100 : 0;
+    });
+
+    // Year comparison (if requesting current year, compare with previous)
+    let yearComparison = null;
+    if (financialYear) {
+      const previousFY = getPreviousFinancialYear(financialYear);
+
+      // Get previous year allocations
+      const prevAllocations = await Allocation.find({
+        department: departmentId,
+        financialYear: previousFY
+      });
+
+      // Get previous year expenditures
+      const prevExpenditures = await Expenditure.find({
+        department: departmentId,
+        financialYear: previousFY
+      });
+
+      const prevTotalAllocated = prevAllocations.reduce((sum, alloc) => sum + alloc.allocatedAmount, 0);
+      const prevTotalSpent = prevAllocations.reduce((sum, alloc) => sum + alloc.spentAmount, 0);
+      const prevUtilization = prevTotalAllocated > 0 ? (prevTotalSpent / prevTotalAllocated) * 100 : 0;
+
+      // Calculate changes
+      const allocatedChange = prevTotalAllocated > 0
+        ? ((totalAllocated - prevTotalAllocated) / prevTotalAllocated) * 100
+        : 0;
+      const spentChange = prevTotalSpent > 0
+        ? ((totalSpent - prevTotalSpent) / prevTotalSpent) * 100
+        : 0;
+      const utilizationChange = utilizationPercentage - prevUtilization;
+
+      yearComparison = {
+        previousYear: previousFY,
+        currentYear: financialYear,
+        previous: {
+          totalAllocated: prevTotalAllocated,
+          totalSpent: prevTotalSpent,
+          utilization: prevUtilization,
+          expenditureCount: prevExpenditures.length
+        },
+        current: {
+          totalAllocated,
+          totalSpent,
+          utilization: utilizationPercentage,
+          expenditureCount: expenditures.length
+        },
+        changes: {
+          allocatedChange,
+          spentChange,
+          utilizationChange
+        }
+      };
+    }
+
+    res.json({
+      success: true,
+      data: {
+        department: {
+          _id: department._id,
+          name: department.name,
+          code: department.code,
+          description: department.description
+        },
+        financialYear,
+        summary: {
+          totalAllocated,
+          totalSpent,
+          totalRemaining,
+          utilizationPercentage,
+          allocationCount: allocations.length,
+          expenditureCount: expenditures.length
+        },
+        allocations,
+        expenditures,
+        statusBreakdown,
+        budgetHeadBreakdown,
+        yearComparison
+      }
+    });
+  } catch (error) {
+    console.error('Get department detail error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching department detail',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// Helper function
+const getCurrentFinancialYear = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  return month >= 4 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+};
+
+const getPreviousFinancialYear = (currentFY) => {
+  const [startYear, endYear] = currentFY.split('-').map(Number);
+  return `${startYear - 1}-${endYear - 1}`;
+};
+
 module.exports = {
   getDepartments,
   getDepartmentById,
   createDepartment,
   updateDepartment,
   deleteDepartment,
-  getDepartmentStats
+  getDepartmentStats,
+  getDepartmentDetail
 };

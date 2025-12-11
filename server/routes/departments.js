@@ -6,18 +6,23 @@ const {
   createDepartment,
   updateDepartment,
   deleteDepartment,
-  getDepartmentStats
+  getDepartmentStats,
+  getDepartmentDetail
 } = require('../controllers/departmentController');
 const { verifyToken, authorize } = require('../middleware/auth');
 
 // All routes require authentication
 router.use(verifyToken);
 
-// All routes require admin access
-router.use(authorize('admin'));
+// Department detail route - accessible by department users for their own dept, or elevated roles
+router.get('/:id/detail', getDepartmentDetail);
 
-router.get('/', getDepartments);
-router.get('/stats', getDepartmentStats);
+// Allow authorized roles to view department list
+router.get('/', authorize('admin', 'principal', 'vice_principal', 'office', 'auditor', 'hod'), getDepartments);
+router.get('/stats', authorize('admin', 'principal', 'vice_principal', 'office', 'auditor'), getDepartmentStats);
+
+// All other routes require admin access
+router.use(authorize('admin'));
 router.get('/:id', getDepartmentById);
 router.post('/', createDepartment);
 router.put('/:id', updateDepartment);

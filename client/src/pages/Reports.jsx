@@ -16,7 +16,7 @@ const Reports = () => {
     budgetHeadId: '',
     status: '',
     submittedBy: '',
-    financialYear: '2024-25'
+    financialYear: ''
   });
   const [departments, setDepartments] = useState([]);
   const [budgetHeads, setBudgetHeads] = useState([]);
@@ -156,7 +156,7 @@ const Reports = () => {
 
         <div className="report-breakdown">
           <h3>Department Breakdown</h3>
-          <div className="breakdown-table">
+          <div className="breakdown-table table-responsive">
             <table>
               <thead>
                 <tr>
@@ -171,12 +171,12 @@ const Reports = () => {
               <tbody>
                 {reportData.departmentBreakdown.map((dept, index) => (
                   <tr key={index}>
-                    <td>{dept.departmentName}</td>
-                    <td>{dept.count}</td>
-                    <td>{formatCurrency(dept.totalAmount)}</td>
-                    <td className="approved">{formatCurrency(dept.approvedAmount)}</td>
-                    <td className="pending">{formatCurrency(dept.pendingAmount)}</td>
-                    <td className="rejected">{formatCurrency(dept.rejectedAmount)}</td>
+                    <td data-label="Department">{dept.departmentName}</td>
+                    <td data-label="Count">{dept.count}</td>
+                    <td data-label="Total Amount">{formatCurrency(dept.totalAmount)}</td>
+                    <td className="approved" data-label="Approved">{formatCurrency(dept.approvedAmount)}</td>
+                    <td className="pending" data-label="Pending">{formatCurrency(dept.pendingAmount)}</td>
+                    <td className="rejected" data-label="Rejected">{formatCurrency(dept.rejectedAmount)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -186,7 +186,7 @@ const Reports = () => {
 
         <div className="report-breakdown">
           <h3>Budget Head Breakdown</h3>
-          <div className="breakdown-table">
+          <div className="breakdown-table table-responsive">
             <table>
               <thead>
                 <tr>
@@ -201,12 +201,12 @@ const Reports = () => {
               <tbody>
                 {reportData.budgetHeadBreakdown.map((head, index) => (
                   <tr key={index}>
-                    <td>{head.budgetHeadName} ({head.budgetHeadCode})</td>
-                    <td>{head.count}</td>
-                    <td>{formatCurrency(head.totalAmount)}</td>
-                    <td className="approved">{formatCurrency(head.approvedAmount)}</td>
-                    <td className="pending">{formatCurrency(head.pendingAmount)}</td>
-                    <td className="rejected">{formatCurrency(head.rejectedAmount)}</td>
+                    <td data-label="Budget Head">{head.budgetHeadName} ({head.budgetHeadCode})</td>
+                    <td data-label="Count">{head.count}</td>
+                    <td data-label="Total Amount">{formatCurrency(head.totalAmount)}</td>
+                    <td className="approved" data-label="Approved">{formatCurrency(head.approvedAmount)}</td>
+                    <td className="pending" data-label="Pending">{formatCurrency(head.pendingAmount)}</td>
+                    <td className="rejected" data-label="Rejected">{formatCurrency(head.rejectedAmount)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -254,7 +254,7 @@ const Reports = () => {
 
         <div className="report-breakdown">
           <h3>Department Breakdown</h3>
-          <div className="breakdown-table">
+          <div className="breakdown-table table-responsive">
             <table>
               <thead>
                 <tr>
@@ -269,12 +269,12 @@ const Reports = () => {
               <tbody>
                 {reportData.departmentBreakdown.map((dept, index) => (
                   <tr key={index}>
-                    <td>{dept.departmentName}</td>
-                    <td>{dept.count}</td>
-                    <td>{formatCurrency(dept.totalAllocated)}</td>
-                    <td>{formatCurrency(dept.totalSpent)}</td>
-                    <td>{formatCurrency(dept.totalRemaining)}</td>
-                    <td>{Math.round((dept.totalSpent / dept.totalAllocated) * 100)}%</td>
+                    <td data-label="Department">{dept.departmentName}</td>
+                    <td data-label="Allocations">{dept.count}</td>
+                    <td data-label="Total Allocated">{formatCurrency(dept.totalAllocated)}</td>
+                    <td data-label="Total Spent">{formatCurrency(dept.totalSpent)}</td>
+                    <td data-label="Remaining">{formatCurrency(dept.totalRemaining)}</td>
+                    <td data-label="Utilization %">{Math.round((dept.totalSpent / dept.totalAllocated) * 100)}%</td>
                   </tr>
                 ))}
               </tbody>
@@ -322,7 +322,7 @@ const Reports = () => {
 
         <div className="report-breakdown">
           <h3>Department Performance</h3>
-          <div className="breakdown-table">
+          <div className="breakdown-table table-responsive">
             <table>
               <thead>
                 <tr>
@@ -337,12 +337,12 @@ const Reports = () => {
               <tbody>
                 {reportData.departmentPerformance.map((dept, index) => (
                   <tr key={index}>
-                    <td>{dept.departmentName}</td>
-                    <td>{formatCurrency(dept.totalAllocated)}</td>
-                    <td>{formatCurrency(dept.totalSpent)}</td>
-                    <td>{formatCurrency(dept.totalRemaining)}</td>
-                    <td>{dept.utilizationPercentage}%</td>
-                    <td>{dept.expenditureCount}</td>
+                    <td data-label="Department">{dept.departmentName}</td>
+                    <td data-label="Allocated">{formatCurrency(dept.totalAllocated)}</td>
+                    <td data-label="Spent">{formatCurrency(dept.totalSpent)}</td>
+                    <td data-label="Remaining">{formatCurrency(dept.totalRemaining)}</td>
+                    <td data-label="Utilization %">{dept.utilizationPercentage}%</td>
+                    <td data-label="Expenditures">{dept.expenditureCount}</td>
                   </tr>
                 ))}
               </tbody>
@@ -537,10 +537,7 @@ const Reports = () => {
             disabled={loading}
           >
             {loading ? (
-              <>
-                <span className="spinner"></span>
-                Generating...
-              </>
+              'Generating...'
             ) : (
               <>
                 <Download size={16} />

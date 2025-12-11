@@ -66,6 +66,7 @@ export const usersAPI = {
 export const departmentsAPI = {
   getDepartments: (params) => api.get('/departments', { params }),
   getDepartmentById: (id) => api.get(`/departments/${id}`),
+  getDepartmentDetail: (id, params) => api.get(`/departments/${id}/detail`, { params }),
   createDepartment: (data) => api.post('/departments', data),
   updateDepartment: (id, data) => api.put(`/departments/${id}`, data),
   deleteDepartment: (id) => api.delete(`/departments/${id}`),
