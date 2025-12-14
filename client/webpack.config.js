@@ -8,7 +8,7 @@ module.exports = {
         path: path.resolve(__dirname, 'build'),
         filename: 'bundle.[contenthash].js',
         clean: true,
-        publicPath: '/CBMS/'
+        publicPath: '/cbms'
     },
     mode: process.env.NODE_ENV || 'development',
     resolve: {
