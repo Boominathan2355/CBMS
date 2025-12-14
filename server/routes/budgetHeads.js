@@ -13,14 +13,13 @@ const { verifyToken, authorize } = require('../middleware/auth');
 // All routes require authentication
 router.use(verifyToken);
 
-// All routes require admin access
-router.use(authorize('admin'));
-
+// Allow all authorized users to view budget heads
 router.get('/', getBudgetHeads);
-router.get('/stats', getBudgetHeadStats);
 router.get('/:id', getBudgetHeadById);
-router.post('/', createBudgetHead);
-router.put('/:id', updateBudgetHead);
-router.delete('/:id', deleteBudgetHead);
+
+// Admin only routes for modification
+router.post('/', authorize('admin'), createBudgetHead);
+router.put('/:id', authorize('admin'), updateBudgetHead);
+router.delete('/:id', authorize('admin'), deleteBudgetHead);
 
 module.exports = router;
