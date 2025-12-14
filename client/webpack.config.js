@@ -45,6 +45,12 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: './index.html',
         publicPath: publicPath,
+        filename: 'index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './index.html',
+        publicPath: publicPath,
+        filename: '404.html',
       }),
       new Dotenv({
         systemvars: true,
