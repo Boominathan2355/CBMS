@@ -400,7 +400,7 @@ const Reports = () => {
               className={`type-btn ${reportType === 'allocations' ? 'active' : ''}`}
               onClick={() => handleReportTypeChange('allocations')}
             >
-              <DollarSign size={24} />
+              <Dollar size={24} />
               Allocation Report
             </button>
             <button
