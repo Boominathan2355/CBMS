@@ -39,9 +39,9 @@ function App() {
         <div className="App">
           <Routes>
             {/* Public Routes */}
-            <Route path="/cbms/login" element={<Login />} />
+            <Route path="/login" element={<Login />} />
             {/* Protected Routes */}
-            <Route path="/cbms" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+            <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
 
@@ -85,7 +85,7 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPassword />} />
 
             {/* Catch all route */}
-            <Route path="*" element={<Navigate to="/cbms/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>
       </Router>

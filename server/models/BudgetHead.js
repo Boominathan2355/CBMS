@@ -14,6 +14,7 @@ const budgetHeadSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: ['infrastructure', 'equipment', 'events', 'maintenance', 'other'],
+    required: [true, 'Budget head category is required'],
     default: 'other'
   },
   isActive: {
@@ -30,7 +31,7 @@ const budgetHeadSchema = new mongoose.Schema({
 });
 
 // Index for better query performance
-budgetHeadSchema.index({ name: 1 });
+
 budgetHeadSchema.index({ category: 1 });
 
 module.exports = mongoose.model('BudgetHead', budgetHeadSchema);

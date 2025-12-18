@@ -136,10 +136,14 @@ mongoose.connect(process.env.MONGODB_URI)
   });
 
 // Graceful shutdown
-process.on('SIGINT', () => {
-  mongoose.connection.close(() => {
+process.on('SIGINT', async () => {
+  try {
+    await mongoose.connection.close();
     console.log('\n🛑 MongoDB connection closed');
     console.log('🛑 Shutting down server...');
     process.exit(0);
-  });
+  } catch (err) {
+    console.error('Error during shutdown:', err);
+    process.exit(1);
+  }
 });
