@@ -11,7 +11,6 @@
     "axios": "^1.12.1",
     "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.5",
-    "gh-pages": "^5.0.0",
     "lucide-react": "^0.556.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
