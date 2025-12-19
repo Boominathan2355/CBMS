@@ -177,28 +177,28 @@ const Dashboard = () => {
           value={formatCurrency(dashboardData.stats.allocated.value)}
           icon={<Wallet size={24} />}
           trend={dashboardData.stats.allocated.trend}
-          color="var(--info)"
+          color="var(--icon-bg-uniform)"
         />
         <StatCard 
           title="Total Utilized" 
           value={formatCurrency(dashboardData.stats.utilized.value)}
           icon={<PieChart size={24} />}
           trend={dashboardData.stats.utilized.trend}
-          color="var(--success)"
+          color="var(--icon-bg-uniform)"
         />
         <StatCard 
           title="Pending Approvals" 
           value={`${dashboardData.stats.requests.value}`}
           icon={<FileText size={24} />}
           trend={dashboardData.stats.requests.trend}
-          color="var(--warning)"
+          color="var(--icon-bg-uniform)"
         />
         <StatCard 
           title="Remaining Balance" 
           value={formatCurrency(dashboardData.stats.balance.value)}
           icon={<CreditCard size={24} />}
           trend={dashboardData.stats.balance.trend}
-          color="var(--accents-purple, #7e22ce)" // Fallback or assume var
+          color="var(--icon-bg-uniform)"
         />
       </div>
 
