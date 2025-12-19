@@ -147,6 +147,7 @@ export const notificationAPI = {
 // Settings API
 export const settingsAPI = {
   getSettings: () => api.get('/settings'),
+  getPublicSettings: () => api.get('/settings/public'),
   updateSettings: (data) => api.put('/settings', data),
   resetSettings: (data) => api.post('/settings/reset', data),
   getSystemInfo: () => api.get('/settings/system-info'),

@@ -58,6 +58,12 @@ const notificationTemplates = {
     message: 'You have pending expenditure requests that require your approval.',
     priority: 'medium',
     actionRequired: true
+  },
+  attachments_missing: {
+    title: 'Attachments Missing',
+    message: 'Your expenditure request is missing required attachments. Please upload them to proceed.',
+    priority: 'high',
+    actionRequired: true
   }
 };
 
@@ -342,10 +348,12 @@ const notifyExpenditureSubmission = async (expenditure) => {
     // Get HOD and Office users
     const hodUsers = await getUsersByRole(['hod']);
     const officeUsers = await getUsersByRole(['office']);
+    const principalUsers = await getUsersByRole(['principal', 'vice_principal']);
 
     const recipients = [
-      ...hodUsers.filter(user => user._id.toString() === expenditure.department.toString()),
-      ...officeUsers
+      ...hodUsers.filter(user => user.department && user.department.toString() === expenditure.department.toString()),
+      ...officeUsers,
+      ...principalUsers
     ].map(user => user._id);
 
     // Create in-app notifications
@@ -364,7 +372,13 @@ const notifyExpenditureSubmission = async (expenditure) => {
     });
 
     // Send email notifications
-    for (const user of [...hodUsers, ...officeUsers]) {
+    const emailRecipients = [
+      ...hodUsers.filter(user => user.department && user.department.toString() === expenditure.department.toString()),
+      ...officeUsers,
+      ...principalUsers
+    ];
+
+    for (const user of emailRecipients) {
       await sendEmailNotification(user.email, 'expenditure_submitted', {
         billNumber: expenditure.billNumber,
         billAmount: expenditure.billAmount,
@@ -454,6 +468,11 @@ const notifyBudgetExhaustion = async (allocation) => {
     });
 
     const utilizationPercentage = (allocation.spentAmount / allocation.allocatedAmount) * 100;
+
+    // Only notify if utilization is above 90% (remaining < 10%)
+    if (utilizationPercentage < 90) {
+      return;
+    }
 
     for (const user of departmentUsers) {
       await createNotification({

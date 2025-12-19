@@ -7,13 +7,20 @@ const budgetHeadSchema = new mongoose.Schema({
     unique: true,
     trim: true
   },
+  code: {
+    type: String,
+    required: [true, 'Budget head code is required'],
+    unique: true,
+    trim: true,
+    uppercase: true
+  },
   description: {
     type: String,
     trim: true
   },
   category: {
     type: String,
-    enum: ['infrastructure', 'equipment', 'events', 'maintenance', 'other'],
+    enum: ['academic', 'infrastructure', 'lab_equipment', 'events', 'maintenance', 'operations', 'other'],
     required: [true, 'Budget head category is required'],
     default: 'other'
   },

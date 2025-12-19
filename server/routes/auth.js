@@ -16,7 +16,7 @@ const { verifyToken } = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
 
 const validateLogin = [
-  check('email').isEmail().withMessage('Please include a valid email').normalizeEmail(),
+  check('email').isEmail().withMessage('Please include a valid email'),
   check('password').exists().withMessage('Password is required'),
   (req, res, next) => {
     const errors = validationResult(req);
