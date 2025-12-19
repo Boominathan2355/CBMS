@@ -146,6 +146,9 @@ body {
   --z-modal: 1000;
   --z-dropdown: 1050;
   --z-overlay: 2000;
+
+  /* ============ Uniform Icon Style ============ */
+  --icon-bg-uniform: var(--primary);
 }
 
 /* ============================================

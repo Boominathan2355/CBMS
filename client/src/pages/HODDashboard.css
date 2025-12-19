@@ -51,7 +51,7 @@
   width: 56px;
   height: 56px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  background: var(--icon-bg-uniform);
   color: white;
   display: flex;
   align-items: center;

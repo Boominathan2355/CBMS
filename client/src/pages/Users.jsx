@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usersAPI, departmentsAPI } from '../services/api';
 import PageHeader from '../components/Common/PageHeader';
-import { UserPlus, Pencil, Trash2, X, Search, Filter, Shield, Check, RotateCw, MoreHorizontal } from 'lucide-react';
+import { Plus, UserPlus, Pencil, Trash2, X, Search, Filter, Shield, Check, RotateCw, MoreHorizontal } from 'lucide-react';
 import './Users.css';
 
 const Users = () => {
@@ -268,14 +268,14 @@ const Users = () => {
       <div className="users-content-container">
 
         {/* Header Section */}
-        <div className="users-page-header">
-          <div className="header-title">
-            <h1>User Management</h1>
-          </div>
-          <button className="btn-add-user" onClick={handleAddUser}>
-            <span className="btn-icon">+</span> Add New User
+        <PageHeader 
+          title="User Management" 
+          subtitle="Manage system users and their permissions"
+        >
+          <button className="btn btn-primary btn-sm" onClick={handleAddUser}>
+            <Plus size={18} /> Add New User
           </button>
-        </div>
+        </PageHeader>
 
         {/* Filters Section */}
         <div className="users-filters-bar">
@@ -321,7 +321,6 @@ const Users = () => {
             </div>
 
             {/* Redesigned Button Placeholders matching the image */}
-            <button className="filter-btn-outline disabled">Filter by Department</button>
           </div>
         </div>
 
