@@ -83,19 +83,19 @@
 }
 
 .stat-card.primary .stat-icon {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  background: var(--icon-bg-uniform);
 }
 
 .stat-card.success .stat-icon {
-  background: linear-gradient(135deg, var(--success) 0%, #10b981 100%);
+  background: var(--icon-bg-uniform);
 }
 
 .stat-card.warning .stat-icon {
-  background: linear-gradient(135deg, var(--warning) 0%, #f59e0b 100%);
+  background: var(--icon-bg-uniform);
 }
 
 .stat-card.info .stat-icon {
-  background: linear-gradient(135deg, var(--info) 0%, #0ea5e9 100%);
+  background: var(--icon-bg-uniform);
 }
 
 .stat-number {

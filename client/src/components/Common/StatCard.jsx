@@ -13,7 +13,7 @@ const StatCard = ({ title, value, icon, trend, color, tooltipText }) => {
 
   return (
     <div className="metric-card">
-      <div className="metric-icon" style={{ backgroundColor: color || 'var(--primary)' }}>
+      <div className="metric-icon" style={{ backgroundColor: color || 'var(--icon-bg-uniform)' }}>
         {icon}
       </div>
       <div className="metric-content">

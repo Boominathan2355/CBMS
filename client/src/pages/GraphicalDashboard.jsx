@@ -365,14 +365,14 @@ const GraphicalDashboard = () => {
     const getChange = (val, mockChange) => (val === 0 ? '0%' : mockChange);
 
     return [
-      { title: 'Total Budget', value: formatCurrency(totalAllocated), icon: <Wallet size={24} />, color: '#667eea', change: null },
-      { title: 'Total Spent', value: formatCurrency(totalSpent), icon: <TrendingUp size={24} />, color: '#28a745', change: null },
-      { title: 'Remaining Budget', value: formatCurrency(totalRemaining), icon: <PiggyBank size={24} />, color: '#ffc107', change: null },
+      { title: 'Total Budget', value: formatCurrency(totalAllocated), icon: <Wallet size={24} />, color: 'var(--icon-bg-uniform)', change: null },
+      { title: 'Total Spent', value: formatCurrency(totalSpent), icon: <TrendingUp size={24} />, color: 'var(--icon-bg-uniform)', change: null },
+      { title: 'Remaining Budget', value: formatCurrency(totalRemaining), icon: <PiggyBank size={24} />, color: 'var(--icon-bg-uniform)', change: null },
       {
         title: 'Utilization Rate',
         value: `${utilizationPercentage.toFixed(1)}%`,
         icon: <Percent size={24} />,
-        color: utilizationPercentage > 90 ? '#dc3545' : utilizationPercentage > 75 ? '#ffc107' : '#17a2b8',
+        color: 'var(--icon-bg-uniform)',
         change: null
       }
     ];
